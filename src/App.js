@@ -1,3 +1,4 @@
+import React from "react";
 import Landingpage from "./pages/Landing";
 import Adminpage from "./pages/Admin";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';

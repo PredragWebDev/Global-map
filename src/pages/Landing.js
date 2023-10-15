@@ -1,3 +1,4 @@
+import React from "react";
 import { StyledLanding } from "./Landing.styled";
 import { useState } from "react";
 

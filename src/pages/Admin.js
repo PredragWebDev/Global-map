@@ -1,6 +1,8 @@
 
-import { StyledAdmin, StyledButton } from "./Admin.styled";
+import React from "react";
+import { StyledAdmin, StyledButton, StyledTextArea } from "./Admin.styled";
 import { useState } from "react";
+import axios from "axios";
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -8,11 +10,68 @@ import './Admin.css';
 
 function Adminpage() {
 
-    const [searchOptions, setSearchOptions] = useState([]);
+    const [country, setCountry] = useState('');
+    const [setting, setSetting] = useState({
+      Leans:'',
+      Solution:'',
+      Ceasefire: '',
+      Right_to_defend:'',
+      Military_Aid: '',
+      Humanitarian_Aid:'',
+      Condemns_Israel:'',
+      Main_Religion:''
+    });
 
-    const handleClickCountry = (value) => {
-        alert(value);
+    const handleClickCountry = (event, value) => {
+
+        setCountry(value.label);
     }
+
+    const handleSettingSubmit = async (e) => {
+        e.preventDefault();
+        if (country.length === 0) {
+          alert("Please select country!");
+          return;
+        }
+        const data = new FormData(e.target);
+
+        // axios({
+        //   method: "post",
+        //   url: `http://127.0.0.1:5001/api/admin/update_setting`,
+        //   data: JSON.stringify({"country":country, "setting":setting}),
+        //   // headers: { "Content-Type": "multipart/form-data" },
+        //   headers: { "Content-Type": "application/json" },
+
+        // })
+        axios.post("http://127.0.0.1:5001/api/admin/update_setting", {
+          country, setting
+        })
+        .then((response) => {
+          
+          console.log(response.data);
+          
+        }).catch((error) => {
+          if (error.response) {
+              alert(error);
+              console.log("error~~~~~~~~~")
+              console.log(error.response)
+              console.log(error.response.status)
+              console.log(error.response.headers)
+            }
+        })
+    }
+
+    const handleSituationSubmit = async (e) => {
+        e.preventDefault();
+
+        alert("okay");
+
+    }
+
+    const handleClickSituation = () => {
+
+    }
+
     return (
         <StyledAdmin>
             <div id = 'header'>
@@ -21,108 +80,155 @@ function Adminpage() {
 
             <div id="input-field">
                 <div id="country">
-                <Autocomplete
-                    id="country-select"
-                    sx={{ width: 300 }}
-                    options={countries}
-                    autoHighlight
-                    getOptionLabel={(option) => option.label}
-                    renderOption={(props, option) => (
-                        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                        <img
-                            loading="lazy"
-                            width="20"
-                            srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                            src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                            alt=""
-                        />
-                        {option.label} ({option.code}) +{option.phone}
-                        </Box>
-                    )}
-                    renderInput={(params) => (
-                        <TextField
-                        {...params}
-                        label="Choose a country"
-                        inputProps={{
-                            ...params.inputProps,
-                            autoComplete: 'new-password', // disable autocomplete and autofill
-                        }}
-                        />
-                    )}
-                />
+                    <Autocomplete
+                        id="country-select"
+                        sx={{ width: '100%' }}
+                        options={countries}
+                        // onChange={(e) => setCountry(e.target.value.label)}
+                        onChange={handleClickCountry}
+                        autoHighlight
+                        getOptionLabel={(option) => option.label}
+                        renderOption={(props, option) => (
+                            <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                            <img
+                                loading="lazy"
+                                width="20"
+                                srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                                src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                                alt=""
+                            />
+                            {option.label} ({option.code}) +{option.phone}
+                            </Box>
+                        )}
+                        renderInput={(params) => (
+                            <TextField
+                            {...params}
+                            label="Choose a country"
+                            inputProps={{
+                                ...params.inputProps,
+                                autoComplete: 'new-password', // disable autocomplete and autofill
+                            }}
+                            />
+                        )}
+                    />
 
                 </div>
                 <div id="input-value-field">
+                    
                     <div id="setting">
-                        <TextField className="input_setting" id="Leans-basic"
-                        sx={{
-                            marginRight:'20px',
-                            marginBottom:'20px',
-                            [`@media (max-width: 600px)`]: {
-                                width: 300,
-                                marginRight:'0',
-                              },   
-                        }} label="Leans" variant="outlined" />
-                        <TextField className="input_setting" id="Solution-basic" sx={{
-                            marginRight:'20px',
-                            marginBottom:'20px',
-                            [`@media (max-width: 600px)`]: {
-                                width: 300,
-                                marginRight:'0',
-                              },   
-                        }} label="Solution" variant="outlined" />
-                        <TextField className="input_setting" id="Ceasefire-basic" sx={{
-                            marginRight:'20px',
-                            marginBottom:'20px',
-                            [`@media (max-width: 600px)`]: {
-                                width: 300,
-                                marginRight:'0',
-                              },   
-                        }} label="Ceasefire" variant="outlined" />
-                        <TextField className="input_setting" id="Right-To-Defend-basic" sx={{
-                            marginRight:'20px',
-                            marginBottom:'20px',
-                            [`@media (max-width: 600px)`]: {
-                                width: 300,
-                                marginRight:'0',
-                              },   
-                        }} label="Right To Defend" variant="outlined" />
-                        <TextField className="input_setting" id="Military-Aid-basic" sx={{
-                            marginRight:'20px',
-                            marginBottom:'20px',
-                            [`@media (max-width: 600px)`]: {
-                                width: 300,
-                                marginRight:'0',
-                              },   
-                        }} label="Military Aid" variant="outlined" />
-                        <TextField className="input_setting" id="Humanitarian-Aid-basic" sx={{
-                            marginRight:'20px',
-                            marginBottom:'20px',
-                            [`@media (max-width: 600px)`]: {
-                                width: 300,
-                                marginRight:'0',
-                              },   
-                        }} label="Humanitarian Aid" variant="outlined" />
-                        <TextField className="input_setting" id="Condemns-Israel-basic" sx={{
-                            marginRight:'20px',
-                            marginBottom:'20px',
-                            [`@media (max-width: 600px)`]: {
-                                width: 300,
-                                marginRight:'0',
-                              },   
-                        }} label="Condemns Israel" variant="outlined" />
-                        <TextField className="input_setting" id="Main-Religion-basic" sx={{
-                            marginRight:'20px',
-                            marginBottom:'20px',
-                            [`@media (max-width: 600px)`]: {
-                                width: 300,
-                                marginRight:'0',
-                              },   
-                        }} label="Main Religion" variant="outlined" />
+                        <form onSubmit={handleSettingSubmit}>
+                            <TextField className="input_setting" id="Leans-basic"
+                            sx={{
+                                marginRight:'20px',
+                                marginBottom:'20px',
+                                [`@media (max-width: 600px)`]: {
+                                    width: '100%',
+                                    marginRight:'0',
+                                },   
+                            }} label="Leans" value={setting.Leans}  variant="outlined" 
+                            onChange={(e) => setSetting({...setting, Leans:e.target.value})}/>
+                            <TextField className="input_setting" id="Solution-basic" sx={{
+                                marginRight:'20px',
+                                marginBottom:'20px',
+                                [`@media (max-width: 600px)`]: {
+                                    width: '100%',
+                                    marginRight:'0',
+                                },   
+                            }} label="Solution" value={setting.Solution} variant="outlined" 
+                            onChange={(e) => setSetting({...setting, Solution:e.target.value})}/>
+                            <TextField className="input_setting" id="Ceasefire-basic" sx={{
+                                marginRight:'20px',
+                                marginBottom:'20px',
+                                [`@media (max-width: 600px)`]: {
+                                    width: '100%',
+                                    marginRight:'0',
+                                },   
+                            }} label="Ceasefire" value={setting.Ceasefire} variant="outlined" 
+                            onChange={(e) => setSetting({...setting, Ceasefire:e.target.value})}/>
+                            <TextField className="input_setting" id="Right-To-Defend-basic" sx={{
+                                marginRight:'20px',
+                                marginBottom:'20px',
+                                [`@media (max-width: 600px)`]: {
+                                    width: '100%',
+                                    marginRight:'0',
+                                },   
+                            }} label="Right To Defend" value={setting.Right_to_defend} variant="outlined" 
+                            onChange={(e) => setSetting({...setting, Right_to_defend:e.target.value})}/>
+                            <TextField className="input_setting" id="Military-Aid-basic" sx={{
+                                marginRight:'20px',
+                                marginBottom:'20px',
+                                [`@media (max-width: 600px)`]: {
+                                    width: '100%',
+                                    marginRight:'0',
+                                },   
+                            }} label="Military Aid" value={setting.Military_Aid} variant="outlined" 
+                            onChange={(e) => setSetting({...setting, Military_Aid:e.target.value})}/>
+                            <TextField className="input_setting" id="Humanitarian-Aid-basic" sx={{
+                                marginRight:'20px',
+                                marginBottom:'20px',
+                                [`@media (max-width: 600px)`]: {
+                                    width: '100%',
+                                    marginRight:'0',
+                                },   
+                            }} label="Humanitarian Aid" value={setting.Humanitarian_Aid} variant="outlined" 
+                            onChange={(e) => setSetting({...setting, Humanitarian_Aid:e.target.value})}/>
+                            <TextField className="input_setting" id="Condemns-Israel-basic" sx={{
+                                marginRight:'20px',
+                                marginBottom:'20px',
+                                [`@media (max-width: 600px)`]: {
+                                    width: '100%',
+                                    marginRight:'0',
+                                },   
+                            }} label="Condemns Israel" value={setting.Condemns_Israel} variant="outlined" 
+                            onChange={(e) => setSetting({...setting, Condemns_Israel:e.target.value})}/>
+                            <TextField className="input_setting" id="Main-Religion-basic" sx={{
+                                marginRight:'20px',
+                                marginBottom:'20px',
+                                [`@media (max-width: 600px)`]: {
+                                    width: '100%',
+                                    marginRight:'0',
+                                },   
+                            }} label="Main Religion" variant="outlined" />
+                            <div id="submit">
+                                <StyledButton type="submit">Upload</StyledButton>
+                            </div>
+                        </form>
+                        
                     </div>
-                    <div id="button">
-                        <StyledButton>save</StyledButton>
+
+                    <div id="situation">
+                        <form onSubmit={handleSituationSubmit}>
+                            <div id="input_situation">
+                                <Autocomplete
+                                id="country-situation"
+                                sx={{ width: 300 }}
+                                onChange={handleClickSituation}
+                                options={situations}
+                                autoHighlight
+                                getOptionLabel={(option) => option.label}
+                                
+                                renderInput={(params) => (
+                                    <TextField
+                                    {...params}
+                                    label="Choose a situation"
+                                    inputProps={{
+                                        ...params.inputProps,
+                                        autoComplete: 'new-password', // disable autocomplete and autofill
+                                    }}
+                                    />
+                                )}
+                                />
+
+                                <StyledTextArea/>
+
+                            </div>
+                            <div id="submit">
+                                <StyledButton type="submit">Upload</StyledButton>
+                            </div>
+                        </form>
+                    
                     </div>
+                    
                 </div>
             </div>
         
@@ -555,4 +661,14 @@ const countries = [
     { code: 'ZW', label: 'Zimbabwe', phone: '263' },
   ];
 
+const situations = [
+    { code: 'AI', label: 'Leans' },
+    { code: 'AL', label: 'Solution'},
+    { code: 'AM', label: 'Ceasefire'},
+    { code: 'AO', label: 'Right to defend'},
+    { code: 'AQ', label: 'Military Aid'},
+    { code: 'AR', label: 'Humanitarian Aid'},
+    { code: 'AS', label: 'American Condemns Israel'},
+    { code: 'AT', label: 'Main Religion'},
+]
 export default Adminpage;

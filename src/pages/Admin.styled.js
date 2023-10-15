@@ -6,30 +6,32 @@ export const StyledAdmin = styled.div`
 
   div#input-field {
     padding: 100px 50px;
-  }
 
-  div#country {
-    width: 30%;
-    display: flex;
-    margin-bottom: 50px;
-    padding: 20px;
-  }
-
-  div#setting {
-    display: flex;
-    flex-wrap: wrap;
+    div#country {
+      width: 30%;
+      display: flex;
+      margin-bottom: 50px;
+    }
   }
 
   div#input-value-field {
+    
+  }
+
+  div#setting {
     border: 1px solid;
     border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
     padding-top: 50px !important;
     padding:20px;
   }
-  div#input-value-field::before {
+
+  div#setting::before {
     content: "Setting";
     position: absolute;
-    top: 335px;
+    top: 295px;
     left: 20%;
     font-size: 30px;
     font-weight: 500;
@@ -38,12 +40,38 @@ export const StyledAdmin = styled.div`
     padding: 0 10px;
   }
 
-  div#button {
+  div#situation {
+    border: 1px solid;
+    border-radius: 10px;
+    padding-top: 50px !important;
+    padding:20px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  div#situation::before {
+    content: "Situation";
+    position: absolute;
+    top: 630px;
+    left: 20%;
+    font-size: 30px;
+    font-weight: 500;
+    transform: translateX(-30%);
+    background-color: white;
+    padding: 0 10px;
+  }
+ 
+  
+
+  div#submit {
     display: flex;
     justify-content: center;
     margin-top: 30px;
   }
 
+  form {
+    width: 100%;
+  }
 
 
   h1 {
@@ -65,15 +93,19 @@ export const StyledAdmin = styled.div`
   }
 
   @media (max-width: 800px) {
-    div#country {
-        width: 50%;
+    div#input-field {
+        div#country {
+          width: 50%;
+        }
     }
    
   }
 
   @media (max-width: 600px) {
-    div#country {
-        width: 100%;
+    div#input-field {
+        div#country {
+          width: 100%;
+        }
     }
   }
 `;
@@ -89,4 +121,15 @@ export const StyledButton = styled.button`
     &:hover {
         color: red;
     }
-`
+`;
+
+export const StyledTextArea = styled.textarea`
+    width: 80%;
+    height: 200px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-family: serif;
+    margin-top: 30px;
+    padding: 20px;
+
+`;
