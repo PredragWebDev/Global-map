@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+
 const path = require("path");
 const mongoose = require("mongoose");
 const routes = require("./routes");
@@ -34,6 +35,8 @@ mongoose
   });
 
   app.use(cors());
+
+  app.use(express.json());
 // Routes
 app.use("/api", routes);
 

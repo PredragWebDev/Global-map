@@ -10,17 +10,19 @@ import './Admin.css';
 
 function Adminpage() {
 
-    const [country, setCountry] = useState('');
+    const [countryName, setCountry] = useState('');
     const [setting, setSetting] = useState({
       Leans:'',
       Solution:'',
-      Ceasefire: '',
-      Right_to_defend:'',
-      Military_Aid: '',
-      Humanitarian_Aid:'',
-      Condemns_Israel:'',
+      Ceasefire: true,
+      Right_to_defend:true,
+      Military_Aid: true,
+      Humanitarian_Aid:true,
+      Condemns_Israel:true,
       Main_Religion:''
     });
+
+    const [situationName, setSituation] = useState('');
 
     const handleClickCountry = (event, value) => {
 
@@ -29,11 +31,11 @@ function Adminpage() {
 
     const handleSettingSubmit = async (e) => {
         e.preventDefault();
-        if (country.length === 0) {
+        if (countryName.length === 0) {
           alert("Please select country!");
           return;
         }
-        const data = new FormData(e.target);
+        // const data = new FormData(e.target);
 
         // axios({
         //   method: "post",
@@ -44,10 +46,16 @@ function Adminpage() {
 
         // })
         axios.post("http://127.0.0.1:5001/api/admin/update_setting", {
-          country, setting
+          countryName, setting
         })
         .then((response) => {
           
+          if (response.data.state === "okay") {
+            alert("Success!");
+          }
+          else {
+            alert("Faild!");
+          }
           console.log(response.data);
           
         }).catch((error) => {
@@ -64,12 +72,37 @@ function Adminpage() {
     const handleSituationSubmit = async (e) => {
         e.preventDefault();
 
-        alert("okay");
+        if (countryName.length === 0) {
+          alert("Please select country!");
+          return;
+        }
+        axios.post("http://127.0.0.1:5001/api/admin/update_situation", {
+          countryName, setting
+        })
+        .then((response) => {
+          
+          if (response.data.state === "okay") {
+            alert("Success!");
+          }
+          else {
+            alert("Faild!");
+          }
+          console.log(response.data);
+          
+        }).catch((error) => {
+          if (error.response) {
+              alert(error);
+              console.log("error~~~~~~~~~")
+              console.log(error.response)
+              console.log(error.response.status)
+              console.log(error.response.headers)
+            }
+        })
 
     }
 
-    const handleClickSituation = () => {
-
+    const handleClickSituation = (event, value) => {
+      setSituation(value.label);
     }
 
     return (
@@ -668,7 +701,7 @@ const situations = [
     { code: 'AO', label: 'Right to defend'},
     { code: 'AQ', label: 'Military Aid'},
     { code: 'AR', label: 'Humanitarian Aid'},
-    { code: 'AS', label: 'American Condemns Israel'},
+    { code: 'AS', label: 'Condemns Israel'},
     { code: 'AT', label: 'Main Religion'},
 ]
 export default Adminpage;

@@ -21,38 +21,47 @@ const mapSchema = new mongoose.Schema(
       Right_to_defend:Boolean,
       Military_Aid:Boolean,
       Humanitarian_Aid:Boolean,
-      American_Contemns_Israel:Boolean,
-      Main_Religion:Boolean,
+      Condemns_Israel:Boolean,
+      Main_Religion:String,
     },
     // The desktop html data of the CARFAX report
-    Leans: {
-      type: String,
-      required:false,
+    situation: {
+      Leans:String,
+      Solution:String,
+      Ceasefire:String,
+      Right_to_defend:String,
+      Military_Aid:String,
+      Humanitarian_Aid:String,
+      Condemns_Israel:String,
     },
-    Solution: {
-      type:String,
-      required:false
-    },
-    Ceasefire: {
-      type:String,
-      required:false
-    },
-    Right_to_defend: {
-      type:String,
-      required:false
-    },
-    Military_Aid: {
-      type:String,
-      required:false
-    },
-    Humanitarian_Aid: {
-      type:String,
-      required:false
-    },
-    American_Contemns_Israel: {
-      type:String,
-      required:false
-    },
+    // Leans: {
+    //   type: String,
+    //   required:false,
+    // },
+    // Solution: {
+    //   type:String,
+    //   required:false
+    // },
+    // Ceasefire: {
+    //   type:String,
+    //   required:false
+    // },
+    // Right_to_defend: {
+    //   type:String,
+    //   required:false
+    // },
+    // Military_Aid: {
+    //   type:String,
+    //   required:false
+    // },
+    // Humanitarian_Aid: {
+    //   type:String,
+    //   required:false
+    // },
+    // American_Contemns_Israel: {
+    //   type:String,
+    //   required:false
+    // },
     
     // // The mobile html data of the CARFAX report
     // mobileReportHtml: {
