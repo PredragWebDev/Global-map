@@ -7,7 +7,7 @@ router.post("/get_countrydata", async (req, res) => {
 
     const setting = countryData.map((data) => {
         const {countryCode, setting} = data;
-
+        
         return {
             countryCode,
             setting
