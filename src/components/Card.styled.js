@@ -6,15 +6,16 @@ export const StyledCard = styled.div`
   max-height: 300px;
   padding:20px;
   box-sizing: border-box;
-  transition: position .5s ease-in-out;
+  transition: position .1s ease-in-out;
 
   div#card_border {
-    height:100%;
+    height:260px;
     border:1px solid;
     background:white;
     border-radius:10px;
     box-sizing: border-box;
   }
+
   div#title {
     align-items:center;
     display:flex;
@@ -40,17 +41,52 @@ export const StyledCard = styled.div`
     }
 
     .sel-card {
-        width: 600px;
-        height: 600px !important;
-        max-height: 600px !important;
-        position: absolute;
-        top: -500px;
-        left: calc((100% - 600px) / 2);
+        div#card_border {
+
+            width: 600px;
+            height: 600px !important;
+            max-height: 600px !important;
+            position: absolute;
+            top: -500px;
+            left: calc((100% - 600px) / 2);
+        }
+
+        p#title {
+            font-size: 40px !important;
+        }
+
+        div#content {
+            font-size: 25px !important;
+        }
+
+        button#zoom {
+            width: 90px !important;
+            height: 40px !important;
+            font-size: 20px !important;
+            border-radius: 10px !important;
+        }
+    }
+    .zoom-title {
+        font-size: 40px !important;
+    }
+    .zoom-content {
+        font-size: 25px !important;
+    }
+    .zoom-button {
+        width: 90px !important;
+        height: 40px !important;
+        font-size: 20px !important;
+        border-radius: 10px !important;
     }
 `
 
 export const StyledButton = styled.button`
+    width:60px;
+    height:30px;
     border-radius: 5px;
     background: green;
     cursor: pointer;
+
+    
+
 `

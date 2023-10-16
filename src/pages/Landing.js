@@ -4,6 +4,7 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import axios from "axios";
 import Card from "../components/Card";
+import ExitButton from "../components/ExitButton";
 
 function Landingpage() {
   // const [countryColor, setCountryColor] = useState([]);
@@ -30,38 +31,38 @@ function Landingpage() {
 
   const handleSituation = (countryCode) => {
 
-    console.log("situation<<<<<<<<<<<<<<<<<<<<>>>", countrySituations)
     const selectedCountry = countrySituations.find(item => {
 
-      console.log("countrycode of item>>>", item.countryCode);
-      console.log("selected countrycode>>>>", countryCode);
-
       if (item.countryCode === countryCode) {
-        console.log("item<>>>>>>>>>>>>>>>",item);
         return item;
       }
     });
 
+    console.log("selected country>>>", selectedCountry);
 
+    if (selectedCountry !== undefined) {
 
-    const keys = Object.keys(selectedCountry);
-
-    setSitutaion(
-      keys.map(key => {
-        if (key !== "countryCode") {
-          const title = key;
-          console.log("title>>>.", title);
-          const content = selectedCountry[key];
-          console.log("content>>>>>", content);
-          return {
-            title:title,
-            content:content
+      const keys = Object.keys(selectedCountry);
+  
+      setSitutaion(
+        keys.map(key => {
+          if (key !== "countryCode") {
+            const title = key;
+            console.log("title>>>.", title);
+            const content = selectedCountry[key];
+            console.log("content>>>>>", content);
+            return {
+              title:title,
+              content:content
+            }
           }
-        }
-      })
-    )
+        })
+      )
+      setIsSituation(true);
+    } else {
+      setIsSituation(false);
+    }
 
-    setIsSituation(true);
   }
 
   useEffect (() => {
@@ -163,18 +164,18 @@ function Landingpage() {
       <div id="map" style={{ width: '100%', height: '100%' }} />
       {/* <MapComponent countryColor = {countryColor}/> */}
 
-      {isSituation ? (
+      {isSituation && (
         <StyledSituation>
           <div id="border">
-            {console.log("situations<<<<<<<<<<<<<<<<", situations)}
             {situations.map((situation, index) => {
               if (situation !== undefined)
               return <Card id={index} title={situation.title} content={situation.content}/>
             })}
+
+            <ExitButton setIsSituation={setIsSituation}/>
+            {/* <button onClick={() => setIsSituation(false)}>exit</button> */}
           </div>
         </StyledSituation>
-      ): (
-        <></>
       )}
       
       {/* <div id="map" style={{ width: '100%', height: '800px' }} />; */}
