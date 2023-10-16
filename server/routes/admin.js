@@ -48,7 +48,7 @@ router.post("/update_setting", async (req, res) => {
 });
 
 router.post("/update_situation", async (req, res) => {
-    const {countryName, situationName, situationContent} = req.body;
+    const {countryName, countryCode, situationName, situationContent} = req.body;
 
     console.log(req.body);
 
@@ -149,49 +149,49 @@ router.post("/update_situation", async (req, res) => {
             case 'Leans':
                 country = new Countries({
                     countryName,
-                    contryCode,
+                    countryCode,
                         Leans:situationContent
                 });
                 break;
             case 'Solution':
                 country = new Countries({
                     countryName,
-                    contryCode,
+                    countryCode,
                         Solution:situationContent
                 });
                 break;
             case 'Ceasefire':
                 country = new Countries({
                     countryName,
-                    contryCode,
+                    countryCode,
                         Ceasefire:situationContent
                 });
                 break;
             case 'Right to defend':
                 country = new Countries({
                     countryName,
-                    contryCode,
+                    countryCode,
                         Right_to_defend:situationContent
                 });
                 break;
             case 'Military Aid':
                 country = new Countries({
                     countryName,
-                    contryCode,
+                    countryCode,
                         Military_Aid:situationContent
                 });
                 break;
             case 'Humanitarian Aid':
                 country = new Countries({
                     countryName,
-                    contryCode,
+                    countryCode,
                         Humanitarian_Aid:situationContent
                 });
                 break; 
             case 'Condemns Israel':
                 country = new Countries({
                     countryName,
-                    contryCode,
+                    countryCode,
                         Condemns_Israel:situationContent
                 });
                 break;

@@ -1,13 +1,30 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 
-const MapComponent = () => {
+const MapComponent = (props) => {
 
-    const countryColors = {
-        RU: '#00FF00',
-        CN: '#0000FF',
-    };
+    // const [countryColors , setCountryColors] = useState([]);
+
+    // console.log("country corlors>>>>>", countryColors);
+    const countryColors = [
+        { countryCode: 'US', color: 'Blue' },
+        { countryCode: 'IR', color: 'Green' },
+        { countryCode: 'GB', color: 'Blue' }
+      ];
+    // const countryColors = {
+    //     RU: 'Green',
+    //     CN: 'red',
+    // };
   useEffect(() => {
+
+    // setCountryColors(props.countryColor.map((data) =>{
+    //     const {countryCode, color} = data;
+
+    //     return {
+    //         countryCode,
+    //         color
+    //     }
+    // }));
     // Set up Mapbox GL JS
     mapboxgl.accessToken = "pk.eyJ1IjoiZGFubnlkaTEyIiwiYSI6ImNsbGVnejM4NDBnbmIzZ25nZTRvaTlmajEifQ.fp0Kus3cRBjo3TCGd0GF-w";
     
@@ -31,23 +48,16 @@ const MapComponent = () => {
           type: 'fill',
           source: 'countries',
           'source-layer': 'country_boundaries',
-        //   paint: {
-        //     'fill-color': [
-        //       'case',
-        //       ['==', ['get', 'iso_3166_1'], 'CN'],
-        //       '#00FF00', // Green color for Russia
-        //       '#FFFFFF', // Default color for other countries
-        //     ],
-        //     'fill-outline-color': "#000000"
-        //   },
+
             paint: {
                 'fill-color': [
                 'match',
                 ['get', 'iso_3166_1'],
-                ...Object.keys(countryColors).reduce((acc, country) => {
-                    acc.push(country, countryColors[country]);
-                    return acc;
-                }, []),
+                ...countryColors.flatMap(country => [country.countryCode, country.color]),
+                // ...Object.keys(countryColors).reduce((acc, country) => {
+                //     acc.push(country, countryColors[country]);
+                //     return acc;
+                // }, []),
                 '#FFFFFF' // Default color for other countries
                 ],
                 'fill-outline-color': "#000000"
@@ -70,7 +80,7 @@ const MapComponent = () => {
     };
   }, []);
 
-  return <div id="map" style={{ width: '100%', height: '800px' }} />;
+  return <div id="map" style={{ width: '100%', height: '100%' }} />;
 };
 
 export default MapComponent;
