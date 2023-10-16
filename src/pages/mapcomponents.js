@@ -4,9 +4,8 @@ import mapboxgl from 'mapbox-gl';
 const MapComponent = () => {
 
     const countryColors = {
-        Russia: '#00FF00',
-        China: '#0000FF',
-        Iran: '#00FF00',
+        RU: '#00FF00',
+        CN: '#0000FF',
     };
   useEffect(() => {
     // Set up Mapbox GL JS
@@ -32,18 +31,31 @@ const MapComponent = () => {
           type: 'fill',
           source: 'countries',
           'source-layer': 'country_boundaries',
-          paint: {
-            'fill-color': [
-              'case',
-              ['==', ['get', 'iso_3166_1_alpha_3'], 'RUS'],
-              '#00FF00', // Green color for Russia
-              '#FFFFFF', // Default color for other countries
-            ],
-            'fill-outline-color': "#002514"
-          },
+        //   paint: {
+        //     'fill-color': [
+        //       'case',
+        //       ['==', ['get', 'iso_3166_1'], 'CN'],
+        //       '#00FF00', // Green color for Russia
+        //       '#FFFFFF', // Default color for other countries
+        //     ],
+        //     'fill-outline-color': "#000000"
+        //   },
+            paint: {
+                'fill-color': [
+                'match',
+                ['get', 'iso_3166_1'],
+                ...Object.keys(countryColors).reduce((acc, country) => {
+                    acc.push(country, countryColors[country]);
+                    return acc;
+                }, []),
+                '#FFFFFF' // Default color for other countries
+                ],
+                'fill-outline-color': "#000000"
+            },
         },
         'waterway-label' // Place the layer below waterway labels for better visibility
       );
+
     });
 
     map.on('click', 'countries-layer', function(e) {

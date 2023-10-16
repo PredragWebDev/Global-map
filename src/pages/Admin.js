@@ -11,22 +11,25 @@ import './Admin.css';
 function Adminpage() {
 
     const [countryName, setCountry] = useState('');
+    const [countryCode, setCountryCode] = useState('');
     const [setting, setSetting] = useState({
       Leans:'',
       Solution:'',
-      Ceasefire: true,
-      Right_to_defend:true,
-      Military_Aid: true,
-      Humanitarian_Aid:true,
-      Condemns_Israel:true,
+      Ceasefire: "yes",
+      Right_to_defend:"yes",
+      Military_Aid: "yes",
+      Humanitarian_Aid:"yes",
+      Condemns_Israel:"yes",
       Main_Religion:''
     });
 
     const [situationName, setSituation] = useState('');
+    const [situationContent, setSituationContent] = useState('');
 
     const handleClickCountry = (event, value) => {
 
         setCountry(value.label);
+        setCountryCode(value.code)
     }
 
     const handleSettingSubmit = async (e) => {
@@ -46,7 +49,7 @@ function Adminpage() {
 
         // })
         axios.post("http://127.0.0.1:5001/api/admin/update_setting", {
-          countryName, setting
+          countryName, countryCode, setting
         })
         .then((response) => {
           
@@ -77,7 +80,7 @@ function Adminpage() {
           return;
         }
         axios.post("http://127.0.0.1:5001/api/admin/update_situation", {
-          countryName, setting
+          countryName, countryCode, situationName, situationContent
         })
         .then((response) => {
           
@@ -252,7 +255,7 @@ function Adminpage() {
                                 )}
                                 />
 
-                                <StyledTextArea/>
+                                <StyledTextArea onChange={(e) => setSituationContent(e.target.value)}/>
 
                             </div>
                             <div id="submit">

@@ -4,7 +4,7 @@ const Countries = require("../models/Country");
 
 router.post("/update_setting", async (req, res) => {
     console.log(req.body);
-    const {countryName, setting} = req.body; 
+    const {countryName, countryCode, setting} = req.body; 
 
     const country = await Countries.findOne({countryName});
 
@@ -23,7 +23,7 @@ router.post("/update_setting", async (req, res) => {
             );
             res.status(200).send({"state":"okay"});
         } catch (error) {
-            console.log("error updating!");
+            console.log("error updating:", error);
             res.status(500).send({"state":"faild"});
         }
     } else {
@@ -31,6 +31,7 @@ router.post("/update_setting", async (req, res) => {
         console.log("in herer?????");
         const newCountry = new Countries({
             countryName,
+            countryCode,
             setting
         })
         try {
@@ -38,7 +39,7 @@ router.post("/update_setting", async (req, res) => {
             await newCountry.save();
             res.status(200).send({"state":"okay"});
         } catch (error) {
-            console.log("error adding!");
+            console.log("error adding:", error);
             res.status(500).send({"state":"faild"});
             
         }
@@ -47,40 +48,169 @@ router.post("/update_setting", async (req, res) => {
 });
 
 router.post("/update_situation", async (req, res) => {
-    const {countryName, situationName, content} = req.body;
+    const {countryName, situationName, situationContent} = req.body;
+
+    console.log(req.body);
 
     const country = await Countries.findOne({countryName});
 
     if (country) {
         try {
-            
-            await Countries.findOneAndUpdate(
-                {countryName:countryName},
-                {
-                    $set: {
-                      fieldName:situationName, fieldValue:content
-                    }
-                  }
-            );
+            switch (situationName) {
+                case 'Leans':
+                    await Countries.findOneAndUpdate(
+                        {countryName:countryName},
+                        {
+                            $set: {
+                                    Leans:situationContent
+                            }
+                        }
+                    );
+                    break;
+                case 'Solution':
+                    await Countries.findOneAndUpdate(
+                        {countryName:countryName},
+                        {
+                            $set: {
+                                    Solution:situationContent
+                            }
+                        },
+                        {multi: true}
+                    );
+                    break;
+                case 'Ceasefire':
+                    await Countries.findOneAndUpdate(
+                        {countryName:countryName},
+                        {
+                            $set: {
+                                    Ceasefire:situationContent
+                            }
+                        },
+                        {multi: true}
+                    );
+                    break;
+                case 'Right to defend':
+                    await Countries.findOneAndUpdate(
+                        {countryName:countryName},
+                        {
+                            $set: {
+                                    Right_to_defend:situationContent
+                            }
+                        },
+                        {multi: true}
+                    );
+                    break;
+                case 'Military Aid':
+                    await Countries.findOneAndUpdate(
+                        {countryName:countryName},
+                        {
+                            $set: {
+                                    Military_Aid:situationContent
+                            }
+                        },
+                        {multi: true}
+                    );
+                    break;
+                case 'Humanitarian Aid':
+                    await Countries.findOneAndUpdate(
+                        {countryName:countryName},
+                        {
+                            $set: {
+                                    Humanitarian_Aid:situationContent
+                            }
+                        },
+                        {multi: true}
+                    );
+                    break; 
+                case 'Condemns Israel':
+                    await Countries.findOneAndUpdate(
+                        {countryName:countryName},
+                        {
+                            $set: {
+                                    Condemns_Israel:situationContent
+                            }
+                        },
+                        {multi: true}
+                    );
+                    break;
+                default:
+                    break;
+            }
             res.status(200).send({"state":"okay"});
         } catch (error) {
-            console.log("error updating!");
+            console.log("error updating:", error);
             res.status(500).send({"state":"faild"});
         }
     } else {
 
-        const newCountry = new Countries({
-            countryName,
-            situation: {
-                situationName:content
-            }
-        })
+        let country = new Countries();
+
+        switch (situationName) {
+            case 'Leans':
+                country = new Countries({
+                    countryName,
+                    contryCode,
+                        Leans:situationContent
+                });
+                break;
+            case 'Solution':
+                country = new Countries({
+                    countryName,
+                    contryCode,
+                        Solution:situationContent
+                });
+                break;
+            case 'Ceasefire':
+                country = new Countries({
+                    countryName,
+                    contryCode,
+                        Ceasefire:situationContent
+                });
+                break;
+            case 'Right to defend':
+                country = new Countries({
+                    countryName,
+                    contryCode,
+                        Right_to_defend:situationContent
+                });
+                break;
+            case 'Military Aid':
+                country = new Countries({
+                    countryName,
+                    contryCode,
+                        Military_Aid:situationContent
+                });
+                break;
+            case 'Humanitarian Aid':
+                country = new Countries({
+                    countryName,
+                    contryCode,
+                        Humanitarian_Aid:situationContent
+                });
+                break; 
+            case 'Condemns Israel':
+                country = new Countries({
+                    countryName,
+                    contryCode,
+                        Condemns_Israel:situationContent
+                });
+                break;
+            default:
+                break;
+        }
+
+        // const newCountry = new Countries({
+        //     countryName,
+        //     situation: {
+        //         Leans:situationContent
+        //     },
+        // });
         try {
             
-            await newCountry.save();
+            await country.save();
             res.status(200).send({"state":"okay"});
         } catch (error) {
-            console.log("error adding!");
+            console.log("error adding:", error);
             res.status(500).send({"state":"faild"});
             
         }
