@@ -6,7 +6,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import {AiFillPlusCircle} from "react-icons/ai";
-import { StyledAdmin, StyledButton, StyledTextArea } from "./Admin.styled";
+import { StyledAdmin, StyledButton, StyledTextArea, StyledSideBar } from "./Admin.styled";
 import AddSituationModal from "../Modal/AddSituation";
 import './Admin.css';
 
@@ -36,6 +36,10 @@ function Adminpage() {
 
         setStanceName(value.label);
       }
+    }
+
+    const handleShowSituation = () => {
+      
     }
 
     const AddSituationContents = (situationName, situationContent) => {
@@ -174,107 +178,113 @@ function Adminpage() {
             <div id = 'header'>
                 <h1>Administrator</h1>
             </div>
+            <div id="board">
+              <StyledSideBar>
+                <button id="situation" onClick={handleShowSituation}>Situation</button>
+                <button id="add_remove">Add/Remove</button>
+                <button id="list_edit">List/Edit</button>
+              </StyledSideBar>
+              <div id="input-field">
+                  <div id="country">
+                      <Autocomplete
+                          id="country-select"
+                          sx={{ width: '100%' }}
+                          options={countries}
+                          // onChange={(e) => setCountry(e.target.value.label)}
+                          onChange={handleClickCountry}
+                          autoHighlight
+                          getOptionLabel={(option) => option.label}
+                          renderOption={(props, option) => (
+                              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                              <img
+                                  loading="lazy"
+                                  width="20"
+                                  srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                                  src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                                  alt=""
+                              />
+                              {option.label} ({option.code}) +{option.phone}
+                              </Box>
+                          )}
+                          renderInput={(params) => (
+                              <TextField
+                              {...params}
+                              label="Choose a country"
+                              inputProps={{
+                                  ...params.inputProps,
+                                  autoComplete: 'new-password', // disable autocomplete and autofill
+                              }}
+                              />
+                          )}
+                      />
 
-            <div id="input-field">
-                <div id="country">
-                    <Autocomplete
-                        id="country-select"
-                        sx={{ width: '100%' }}
-                        options={countries}
-                        // onChange={(e) => setCountry(e.target.value.label)}
-                        onChange={handleClickCountry}
-                        autoHighlight
-                        getOptionLabel={(option) => option.label}
-                        renderOption={(props, option) => (
-                            <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                            <img
-                                loading="lazy"
-                                width="20"
-                                srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                                src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                                alt=""
-                            />
-                            {option.label} ({option.code}) +{option.phone}
-                            </Box>
-                        )}
-                        renderInput={(params) => (
-                            <TextField
-                            {...params}
-                            label="Choose a country"
-                            inputProps={{
-                                ...params.inputProps,
-                                autoComplete: 'new-password', // disable autocomplete and autofill
-                            }}
-                            />
-                        )}
-                    />
+                  </div>
+                  <div id="input-value-field">
+                      
+                      <div id="situation">
+                          <form onSubmit={handleSituationSubmit}>
+                              {
+                                situationNames.map((situationName, key) => {
+                                  return(
+                                  <TextField key={key} className="input_setting" id="Leans-basic"
+                                  sx={{
+                                      marginRight:'20px',
+                                      marginBottom:'20px',
+                                      [`@media (max-width: 600px)`]: {
+                                          width: '100%',
+                                          marginRight:'0',
+                                      },   
+                                  }} label={situationName}  variant="outlined" 
+                                  onChange={(e) => AddSituationContents(situationName, e.target.value)}
+                                  />)
+                                })
+                              }
+                              
+                              <div id="submit">
+                                  <StyledButton type="submit">Save</StyledButton>
+                              </div>
+                          </form>
 
-                </div>
-                <div id="input-value-field">
-                    
-                    <div id="situation">
-                        <form onSubmit={handleSituationSubmit}>
-                            {
-                              situationNames.map((situationName, key) => {
-                                return(
-                                <TextField key={key} className="input_setting" id="Leans-basic"
-                                sx={{
-                                    marginRight:'20px',
-                                    marginBottom:'20px',
-                                    [`@media (max-width: 600px)`]: {
-                                        width: '100%',
-                                        marginRight:'0',
-                                    },   
-                                }} label={situationName}  variant="outlined" 
-                                onChange={(e) => AddSituationContents(situationName, e.target.value)}
-                                />)
-                              })
-                            }
-                            
-                            <div id="submit">
-                                <StyledButton type="submit">Save</StyledButton>
-                            </div>
-                        </form>
+                          <AiFillPlusCircle style={{width:"50px", height:"50px", cursor:"pointer"}} onClick={() => setShowAddSituationModal(true)}/>
+                          
+                      </div>
 
-                        <AiFillPlusCircle style={{width:"50px", height:"50px", cursor:"pointer"}} onClick={() => setShowAddSituationModal(true)}/>
-                        
-                    </div>
+                      <div id="stance">
+                          <form onSubmit={handleStanceSubmit}>
+                              <div id="input_situation">
+                                  <Autocomplete
+                                  id="country-situation"
+                                  sx={{ width: '100%' }}
+                                  onChange={handleClickStance}
+                                  options={situationNamesForUI}
+                                  autoHighlight
+                                  getOptionLabel={(option) => option.label}
+                                  
+                                  renderInput={(params) => (
+                                      <TextField
+                                      {...params}
+                                      label="Choose a situation"
+                                      inputProps={{
+                                          ...params.inputProps,
+                                          autoComplete: 'new-password', // disable autocomplete and autofill
+                                      }}
+                                      />
+                                  )}
+                                  />
 
-                    <div id="stance">
-                        <form onSubmit={handleStanceSubmit}>
-                            <div id="input_situation">
-                                <Autocomplete
-                                id="country-situation"
-                                sx={{ width: '100%' }}
-                                onChange={handleClickStance}
-                                options={situationNamesForUI}
-                                autoHighlight
-                                getOptionLabel={(option) => option.label}
-                                
-                                renderInput={(params) => (
-                                    <TextField
-                                    {...params}
-                                    label="Choose a situation"
-                                    inputProps={{
-                                        ...params.inputProps,
-                                        autoComplete: 'new-password', // disable autocomplete and autofill
-                                    }}
-                                    />
-                                )}
-                                />
+                                  <StyledTextArea onChange={(e) => setStanceContent(e.target.value)}/>
 
-                                <StyledTextArea onChange={(e) => setStanceContent(e.target.value)}/>
-
-                            </div>
-                            <div id="submit">
-                                <StyledButton type="submit">Upload</StyledButton>
-                            </div>
-                        </form>
-                    
-                    </div>
-                    
-                </div>
-              {showAddSituationModal && <AddSituationModal setShowAddSituationModal={setShowAddSituationModal}/>}
+                              </div>
+                              <div id="submit">
+                                  <StyledButton type="submit">Upload</StyledButton>
+                              </div>
+                          </form>
+                      
+                      </div>
+                      
+                  </div>
+                {showAddSituationModal && <AddSituationModal setShowAddSituationModal={setShowAddSituationModal}/>}
+              </div>
             </div>
 
         
