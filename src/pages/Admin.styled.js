@@ -14,8 +14,8 @@ export const StyledAdmin = styled.div`
     }
   }
 
-  div#input-value-field {
-    
+  div#board {
+    display:flex;
   }
 
   div#situation {
@@ -151,3 +151,22 @@ export const StyledTextArea = styled.textarea`
     padding: 20px;
     box-sizing: border-box;
 `;
+
+export const StyledSideBar = styled.div`
+  width: 20%;
+  padding: 1%;
+  border-right: 1px solid;
+  button {
+    width: 100%;
+    height: 40px;
+    background: burlywood;
+    border: 0;
+    border-radius: 10px;
+    font-size: 25px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    &:hover {
+      background:grey;
+    }
+  }
+`

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Countries = require("../models/Country");
-const Situation = require("../models/Situation");
+const Option = require("../models/Optioin");
 
 router.post("/update_situation", async (req, res) => {
     console.log(req.body);
@@ -138,7 +138,7 @@ router.post("/update_stance", async (req, res) => {
 })
 
 router.post("/get_situations", async (req, res) => {
-    const situations = await Situation.find({});
+    const situations = await Option.find({});
 
     res.send({"state":"okay", situations});
 })
@@ -147,11 +147,11 @@ router.post("/add_situation", async (req, res) => {
     const {situationName} = req.body;
 
     try {
-        const situation = new Situation({
+        const option = new Option({
             situationName
         })
 
-        situation.save();
+        option.save();
         res.send({"state":"okay"});
         
     } catch (error) {

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const situationSchema = new mongoose.Schema(
+const optionSchema = new mongoose.Schema(
   {
     // The user that requested this report
     // Not required if single report
@@ -19,6 +19,6 @@ const situationSchema = new mongoose.Schema(
   }
 );
 
-situationSchema.index({ createdAt: 1 });
+optionSchema.index({ createdAt: 1 });
 
-module.exports = mongoose.model("Situations", situationSchema);
+module.exports = mongoose.model("Optioins", optionSchema);
