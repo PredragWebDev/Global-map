@@ -1,10 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const Countries = require("../models/Country");
+const Situation = require("../models/Situation");
 
-router.post("/update_setting", async (req, res) => {
+router.post("/update_situation", async (req, res) => {
     console.log(req.body);
-    const {countryName, countryCode, setting} = req.body; 
+    const {countryName, countryCode, situationContents} = req.body; 
+
+    const situation = JSON.stringify(situationContents);
 
     const country = await Countries.findOne({countryName});
 
@@ -17,7 +20,7 @@ router.post("/update_setting", async (req, res) => {
                 {countryName:countryName},
                 {
                     $set: {
-                      setting
+                        situation
                     }
                   }
             );
@@ -32,7 +35,7 @@ router.post("/update_setting", async (req, res) => {
         const newCountry = new Countries({
             countryName,
             countryCode,
-            setting
+            situation
         })
         try {
             
@@ -47,7 +50,7 @@ router.post("/update_setting", async (req, res) => {
 
 });
 
-router.post("/update_situation", async (req, res) => {
+router.post("/update_stance", async (req, res) => {
     const {countryName, countryCode, situationName, situationContent} = req.body;
 
     console.log(req.body);
@@ -214,6 +217,30 @@ router.post("/update_situation", async (req, res) => {
             res.status(500).send({"state":"faild"});
             
         }
+    }
+
+})
+
+router.post("/get_situations", async (req, res) => {
+    const situations = await Situation.find({});
+
+    res.send({"state":"okay", situations});
+})
+
+router.post("/add_situation", async (req, res) => {
+    const {situationName} = req.body;
+
+    try {
+        const situation = new Situation({
+            situationName
+        })
+
+        situation.save();
+        res.send({"state":"okay"});
+        
+    } catch (error) {
+        console.log("error is occured:", error);
+        res.send({"state":"faild"});
     }
 
 })

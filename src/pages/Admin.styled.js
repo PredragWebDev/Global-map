@@ -18,7 +18,7 @@ export const StyledAdmin = styled.div`
     
   }
 
-  div#setting {
+  div#situation {
     border: 1px solid;
     border-radius: 10px;
     display: flex;
@@ -26,10 +26,11 @@ export const StyledAdmin = styled.div`
     margin-bottom: 30px;
     padding-top: 50px !important;
     padding:20px;
+    justify-content: space-around;
   }
 
-  div#setting::before {
-    content: "Setting";
+  div#situation::before {
+    content: "Situation";
     position: absolute;
     top: 295px;
     left: 20%;
@@ -40,7 +41,7 @@ export const StyledAdmin = styled.div`
     padding: 0 10px;
   }
 
-  div#situation {
+  div#stance {
     border: 1px solid;
     border-radius: 10px;
     padding-top: 50px !important;
@@ -49,10 +50,10 @@ export const StyledAdmin = styled.div`
     flex-wrap: wrap;
   }
 
-  div#situation::before {
-    content: "Situation";
-    position: absolute;
-    top: 630px;
+  div#stance::before {
+    content: "Stance ";
+    position: relative;
+    top: -73px;
     left: 20%;
     font-size: 30px;
     font-weight: 500;
@@ -70,7 +71,7 @@ export const StyledAdmin = styled.div`
   }
 
   form {
-    width: 100%;
+    width: 95%;
   }
 
 
@@ -107,6 +108,7 @@ export const StyledAdmin = styled.div`
           width: 100%;
         }
     }
+
   }
 `;
  
@@ -124,12 +126,12 @@ export const StyledButton = styled.button`
 `;
 
 export const StyledTextArea = styled.textarea`
-    width: 80%;
+    width: 100%;
     height: 200px;
     border-radius: 10px;
     font-size: 20px;
     font-family: serif;
     margin-top: 30px;
     padding: 20px;
-
+    box-sizing: border-box;
 `;

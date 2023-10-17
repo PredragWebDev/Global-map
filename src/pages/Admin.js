@@ -1,38 +1,51 @@
 
-import React from "react";
-import { StyledAdmin, StyledButton, StyledTextArea } from "./Admin.styled";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import {AiFillPlusCircle} from "react-icons/ai";
+import { StyledAdmin, StyledButton, StyledTextArea } from "./Admin.styled";
+import AddSituationModal from "../Modal/AddSituation";
 import './Admin.css';
 
 function Adminpage() {
 
     const [countryName, setCountry] = useState('');
     const [countryCode, setCountryCode] = useState('');
-    const [setting, setSetting] = useState({
-      Leans:'',
-      Solution:'',
-      Ceasefire: "yes",
-      Right_to_defend:"yes",
-      Military_Aid: "yes",
-      Humanitarian_Aid:"yes",
-      Condemns_Israel:"yes",
-      Main_Religion:''
-    });
+    const [situationNames, setSituationNames] = useState([]);
 
-    const [situationName, setSituation] = useState('');
-    const [situationContent, setSituationContent] = useState('');
+    const [stanceName, setStanceName] = useState('');
+    // const [situationContents, setSituationContents] = useState({});
+    const [showAddSituationModal, setShowAddSituationModal] = useState(false);
+  
+    let situationContents = {};
 
     const handleClickCountry = (event, value) => {
+        if (value !== null) {
 
-        setCountry(value.label);
-        setCountryCode(value.code)
+          setCountry(value.label);
+          setCountryCode(value.code)
+        }
     }
 
-    const handleSettingSubmit = async (e) => {
+    const handleClickStance = (event, value) => {
+      if (value !== null) {
+
+        setStanceName(value.label);
+      }
+    }
+
+    const AddSituationContents = (situationName, situationContent) => {
+
+      console.log("situation name>>>>", situationName);
+      console.log("situation content>>>>", situationContent);
+      situationContents[situationName] = situationContent;
+      console.log("situation contentssssss>>>>", situationContents);
+    }
+
+    const handleSituationSubmit = async (e) => {
         e.preventDefault();
         if (countryName.length === 0) {
           alert("Please select country!");
@@ -40,47 +53,8 @@ function Adminpage() {
         }
         // const data = new FormData(e.target);
 
-        // axios({
-        //   method: "post",
-        //   url: `http://127.0.0.1:5001/api/admin/update_setting`,
-        //   data: JSON.stringify({"country":country, "setting":setting}),
-        //   // headers: { "Content-Type": "multipart/form-data" },
-        //   headers: { "Content-Type": "application/json" },
-
-        // })
-        axios.post("http://127.0.0.1:5001/api/admin/update_setting", {
-          countryName, countryCode, setting
-        })
-        .then((response) => {
-          
-          if (response.data.state === "okay") {
-            alert("Success!");
-          }
-          else {
-            alert("Faild!");
-          }
-          console.log(response.data);
-          
-        }).catch((error) => {
-          if (error.response) {
-              alert(error);
-              console.log("error~~~~~~~~~")
-              console.log(error.response)
-              console.log(error.response.status)
-              console.log(error.response.headers)
-            }
-        })
-    }
-
-    const handleSituationSubmit = async (e) => {
-        e.preventDefault();
-
-        if (countryName.length === 0) {
-          alert("Please select country!");
-          return;
-        }
         axios.post("http://127.0.0.1:5001/api/admin/update_situation", {
-          countryName, countryCode, situationName, situationContent
+          countryName, countryCode, situationContents
         })
         .then((response) => {
           
@@ -101,12 +75,63 @@ function Adminpage() {
               console.log(error.response.headers)
             }
         })
-
     }
 
-    const handleClickSituation = (event, value) => {
-      setSituation(value.label);
-    }
+    // const handleSituationSubmit = async (e) => {
+    //     e.preventDefault();
+
+    //     if (countryName.length === 0) {
+    //       alert("Please select country!");
+    //       return;
+    //     }
+    //     axios.post("http://127.0.0.1:5001/api/admin/update_stance", {
+    //       countryName, countryCode, situationName, situationContent
+    //     })
+    //     .then((response) => {
+          
+    //       if (response.data.state === "okay") {
+    //         alert("Success!");
+    //       }
+    //       else {
+    //         alert("Faild!");
+    //       }
+    //       console.log(response.data);
+          
+    //     }).catch((error) => {
+    //       if (error.response) {
+    //           alert(error);
+    //           console.log("error~~~~~~~~~")
+    //           console.log(error.response)
+    //           console.log(error.response.status)
+    //           console.log(error.response.headers)
+    //         }
+    //     })
+
+    // }
+
+    useEffect(() => {
+      axios.post("http://127.0.0.1:5001/api/admin/get_situations")
+      .then((response) => {
+        
+        if (response.data.state === "okay") {
+          setSituationNames(response.data.situations);
+        }
+        else {
+          alert("Faild!");
+        }
+        console.log(response.data);
+        
+      }).catch((error) => {
+        if (error.response) {
+            alert(error);
+            console.log("error~~~~~~~~~")
+            console.log(error.response)
+            console.log(error.response.status)
+            console.log(error.response.headers)
+          }
+      })
+    }, []);
+    
 
     return (
         <StyledAdmin>
@@ -151,94 +176,41 @@ function Adminpage() {
                 </div>
                 <div id="input-value-field">
                     
-                    <div id="setting">
-                        <form onSubmit={handleSettingSubmit}>
-                            <TextField className="input_setting" id="Leans-basic"
-                            sx={{
-                                marginRight:'20px',
-                                marginBottom:'20px',
-                                [`@media (max-width: 600px)`]: {
-                                    width: '100%',
-                                    marginRight:'0',
-                                },   
-                            }} label="Leans" value={setting.Leans}  variant="outlined" 
-                            onChange={(e) => setSetting({...setting, Leans:e.target.value})}/>
-                            <TextField className="input_setting" id="Solution-basic" sx={{
-                                marginRight:'20px',
-                                marginBottom:'20px',
-                                [`@media (max-width: 600px)`]: {
-                                    width: '100%',
-                                    marginRight:'0',
-                                },   
-                            }} label="Solution" value={setting.Solution} variant="outlined" 
-                            onChange={(e) => setSetting({...setting, Solution:e.target.value})}/>
-                            <TextField className="input_setting" id="Ceasefire-basic" sx={{
-                                marginRight:'20px',
-                                marginBottom:'20px',
-                                [`@media (max-width: 600px)`]: {
-                                    width: '100%',
-                                    marginRight:'0',
-                                },   
-                            }} label="Ceasefire" value={setting.Ceasefire} variant="outlined" 
-                            onChange={(e) => setSetting({...setting, Ceasefire:e.target.value})}/>
-                            <TextField className="input_setting" id="Right-To-Defend-basic" sx={{
-                                marginRight:'20px',
-                                marginBottom:'20px',
-                                [`@media (max-width: 600px)`]: {
-                                    width: '100%',
-                                    marginRight:'0',
-                                },   
-                            }} label="Right To Defend" value={setting.Right_to_defend} variant="outlined" 
-                            onChange={(e) => setSetting({...setting, Right_to_defend:e.target.value})}/>
-                            <TextField className="input_setting" id="Military-Aid-basic" sx={{
-                                marginRight:'20px',
-                                marginBottom:'20px',
-                                [`@media (max-width: 600px)`]: {
-                                    width: '100%',
-                                    marginRight:'0',
-                                },   
-                            }} label="Military Aid" value={setting.Military_Aid} variant="outlined" 
-                            onChange={(e) => setSetting({...setting, Military_Aid:e.target.value})}/>
-                            <TextField className="input_setting" id="Humanitarian-Aid-basic" sx={{
-                                marginRight:'20px',
-                                marginBottom:'20px',
-                                [`@media (max-width: 600px)`]: {
-                                    width: '100%',
-                                    marginRight:'0',
-                                },   
-                            }} label="Humanitarian Aid" value={setting.Humanitarian_Aid} variant="outlined" 
-                            onChange={(e) => setSetting({...setting, Humanitarian_Aid:e.target.value})}/>
-                            <TextField className="input_setting" id="Condemns-Israel-basic" sx={{
-                                marginRight:'20px',
-                                marginBottom:'20px',
-                                [`@media (max-width: 600px)`]: {
-                                    width: '100%',
-                                    marginRight:'0',
-                                },   
-                            }} label="Condemns Israel" value={setting.Condemns_Israel} variant="outlined" 
-                            onChange={(e) => setSetting({...setting, Condemns_Israel:e.target.value})}/>
-                            <TextField className="input_setting" id="Main-Religion-basic" sx={{
-                                marginRight:'20px',
-                                marginBottom:'20px',
-                                [`@media (max-width: 600px)`]: {
-                                    width: '100%',
-                                    marginRight:'0',
-                                },   
-                            }} label="Main Religion" variant="outlined" />
+                    <div id="situation">
+                        <form onSubmit={handleSituationSubmit}>
+                            {
+                              situationNames.map((situationName, key) => {
+                                return(
+                                <TextField key={key} className="input_setting" id="Leans-basic"
+                                sx={{
+                                    marginRight:'20px',
+                                    marginBottom:'20px',
+                                    [`@media (max-width: 600px)`]: {
+                                        width: '100%',
+                                        marginRight:'0',
+                                    },   
+                                }} label={situationName.situationName}  variant="outlined" 
+                                onChange={(e) => AddSituationContents(situationName.situationName, e.target.value)}
+                                />)
+                              })
+                            }
+                            
                             <div id="submit">
-                                <StyledButton type="submit">Upload</StyledButton>
+                                <StyledButton type="submit">Save</StyledButton>
                             </div>
                         </form>
+
+                        <AiFillPlusCircle style={{width:"50px", height:"50px", cursor:"pointer"}} onClick={() => setShowAddSituationModal(true)}/>
                         
                     </div>
 
-                    <div id="situation">
+                    {/* <div id="situation">
                         <form onSubmit={handleSituationSubmit}>
                             <div id="input_situation">
                                 <Autocomplete
                                 id="country-situation"
-                                sx={{ width: 300 }}
-                                onChange={handleClickSituation}
+                                sx={{ width: '100%' }}
+                                onChange={handleClickStance}
                                 options={situations}
                                 autoHighlight
                                 getOptionLabel={(option) => option.label}
@@ -263,12 +235,14 @@ function Adminpage() {
                             </div>
                         </form>
                     
-                    </div>
+                    </div> */}
                     
                 </div>
+              {showAddSituationModal && <AddSituationModal setShowAddSituationModal={setShowAddSituationModal}/>}
             </div>
+
         
-        </StyledAdmin>
+        </StyledAdmin >
     );
 }
 
