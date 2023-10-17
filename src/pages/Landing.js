@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyledLanding, StyledSituation } from "./Landing.styled";
+import { AiFillCloseCircle } from "react-icons/ai";
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import axios from "axios";
@@ -12,8 +13,9 @@ function Landingpage() {
   const [countrySetting, setCountrySetting] = useState({});
   // const [countrySituations, setCountrySituations] = useState([]);
   const [isSituation, setIsSituation] = useState(false);
-  let countrySituations = [];
-  const [situations, setSitutaion] = useState ([
+  const [showExitButton, setShowExitButton] = useState(true);
+  let countryStance = [];
+  const [stance, setStance] = useState ([
     {
       title:'this is my first title',
       content:"this is my first content"
@@ -31,10 +33,13 @@ function Landingpage() {
 
   const handleSituation = (countryCode) => {
 
-    const selectedCountry = countrySituations.find(item => {
+    const selectedCountry = countryStance.find(item => {
 
-      if (item.countryCode === countryCode) {
-        return item;
+      if (item !== null) {
+
+        if (item.countryCode === countryCode) {
+          return item;
+        }
       }
     });
 
@@ -42,14 +47,16 @@ function Landingpage() {
 
     if (selectedCountry !== undefined) {
 
-      const keys = Object.keys(selectedCountry);
+      const temp = selectedCountry.stance;
+
+      const keys = Object.keys(temp);
   
-      setSitutaion(
+      setStance(
         keys.map(key => {
           if (key !== "countryCode") {
             const title = key;
             console.log("title>>>.", title);
-            const content = selectedCountry[key];
+            const content = temp[key];
             console.log("content>>>>>", content);
             return {
               title:title,
@@ -70,6 +77,7 @@ function Landingpage() {
     .then((response) => {
       
       console.log("okay???");
+      console.log("response<<<<", response.data);
 
       countryColors = response.data.countryColor.map((country) => {
 
@@ -87,9 +95,9 @@ function Landingpage() {
         }
       });
 
-      setCountrySetting(response.data.setting);
+      setCountrySetting(response.data.situation);
 
-      countrySituations = response.data.situation;
+      countryStance = response.data.stance;
 
       mapboxgl.accessToken = "pk.eyJ1IjoiZGFubnlkaTEyIiwiYSI6ImNsbGVnejM4NDBnbmIzZ25nZTRvaTlmajEifQ.fp0Kus3cRBjo3TCGd0GF-w";
     
@@ -167,12 +175,13 @@ function Landingpage() {
       {isSituation && (
         <StyledSituation>
           <div id="border">
-            {situations.map((situation, index) => {
+            {stance.map((situation, index) => {
               if (situation !== undefined)
-              return <Card id={index} title={situation.title} content={situation.content}/>
+              return <Card id={index} title={situation.title} content={situation.content} setShowExitButton={setShowExitButton}/>
             })}
 
-            <ExitButton setIsSituation={setIsSituation}/>
+            {/* <ExitButton setIsSituation={setIsSituation}/> */}
+            {showExitButton && <AiFillCloseCircle className="exitbutton" style={{width:"40px", height:"40px", cursor:"pointer"}} onClick={() => setIsSituation(false)}/>}
             {/* <button onClick={() => setIsSituation(false)}>exit</button> */}
           </div>
         </StyledSituation>

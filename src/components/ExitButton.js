@@ -11,7 +11,7 @@ const ExitButton = (props) => {
     return (
         <>
         <StyledExitButton id="exit-button" onClick={() => props.setIsSituation(false)}>
-            exit
+            <AiFillCloseCircle/>
         </StyledExitButton>
         
         </>

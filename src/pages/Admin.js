@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import axios from "axios";
 import Autocomplete from '@mui/material/Autocomplete';
@@ -11,15 +11,16 @@ import AddSituationModal from "../Modal/AddSituation";
 import './Admin.css';
 
 function Adminpage() {
-
+    const modalRef = useRef(null);
     const [countryName, setCountry] = useState('');
     const [countryCode, setCountryCode] = useState('');
     const [situationNames, setSituationNames] = useState([]);
 
     const [stanceName, setStanceName] = useState('');
-    // const [situationContents, setSituationContents] = useState({});
+    const [stanceContents, setStanceContent] = useState({});
     const [showAddSituationModal, setShowAddSituationModal] = useState(false);
-  
+
+    const [situationNamesForUI, setSituationNamesForUI] = useState([]);
     let situationContents = {};
 
     const handleClickCountry = (event, value) => {
@@ -39,10 +40,9 @@ function Adminpage() {
 
     const AddSituationContents = (situationName, situationContent) => {
 
-      console.log("situation name>>>>", situationName);
-      console.log("situation content>>>>", situationContent);
       situationContents[situationName] = situationContent;
-      console.log("situation contentssssss>>>>", situationContents);
+
+      console.log("asfdafdsafsa>>>>>", situationContents);
     }
 
     const handleSituationSubmit = async (e) => {
@@ -77,44 +77,80 @@ function Adminpage() {
         })
     }
 
-    // const handleSituationSubmit = async (e) => {
-    //     e.preventDefault();
+    const handleStanceSubmit = async (e) => {
+        e.preventDefault();
 
-    //     if (countryName.length === 0) {
-    //       alert("Please select country!");
-    //       return;
-    //     }
-    //     axios.post("http://127.0.0.1:5001/api/admin/update_stance", {
-    //       countryName, countryCode, situationName, situationContent
-    //     })
-    //     .then((response) => {
+        if (countryName.length === 0) {
+          alert("Please select country!");
+          return;
+        }
+        axios.post("http://127.0.0.1:5001/api/admin/update_stance", {
+          countryName, countryCode, stanceName, stanceContents
+        })
+        .then((response) => {
           
-    //       if (response.data.state === "okay") {
-    //         alert("Success!");
-    //       }
-    //       else {
-    //         alert("Faild!");
-    //       }
-    //       console.log(response.data);
+          if (response.data.state === "okay") {
+            alert("Success!");
+          }
+          else {
+            alert("Faild!");
+          }
+          console.log(response.data);
           
-    //     }).catch((error) => {
-    //       if (error.response) {
-    //           alert(error);
-    //           console.log("error~~~~~~~~~")
-    //           console.log(error.response)
-    //           console.log(error.response.status)
-    //           console.log(error.response.headers)
-    //         }
-    //     })
+        }).catch((error) => {
+          if (error.response) {
+              alert(error);
+              console.log("error~~~~~~~~~")
+              console.log(error.response)
+              console.log(error.response.status)
+              console.log(error.response.headers)
+            }
+        })
 
-    // }
+    }
+
+    const handleClickOutsideModal = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setShowAddSituationModal(false);
+      }
+    };
+  
+    // Add event listener when the modal is open
+    useEffect(() => {
+      if (showAddSituationModal) {
+        document.addEventListener("click", handleClickOutsideModal);
+      }
+  
+      // Clean up the event listener when the modal is closed
+      return () => {
+        document.removeEventListener("click", handleClickOutsideModal);
+      };
+    }, [showAddSituationModal]);
 
     useEffect(() => {
       axios.post("http://127.0.0.1:5001/api/admin/get_situations")
       .then((response) => {
         
         if (response.data.state === "okay") {
-          setSituationNames(response.data.situations);
+
+          let tempSituationName = response.data.situations.map(situation => {
+            return (
+              situation.situationName
+            )
+          })
+
+          setSituationNames(tempSituationName);
+
+          tempSituationName = response.data.situations.map(situation => {
+            return(
+              {
+                label:situation.situationName
+              }
+            )
+          });
+
+          setSituationNamesForUI(tempSituationName);
+          
         }
         else {
           alert("Faild!");
@@ -189,8 +225,8 @@ function Adminpage() {
                                         width: '100%',
                                         marginRight:'0',
                                     },   
-                                }} label={situationName.situationName}  variant="outlined" 
-                                onChange={(e) => AddSituationContents(situationName.situationName, e.target.value)}
+                                }} label={situationName}  variant="outlined" 
+                                onChange={(e) => AddSituationContents(situationName, e.target.value)}
                                 />)
                               })
                             }
@@ -204,14 +240,14 @@ function Adminpage() {
                         
                     </div>
 
-                    {/* <div id="situation">
-                        <form onSubmit={handleSituationSubmit}>
+                    <div id="stance">
+                        <form onSubmit={handleStanceSubmit}>
                             <div id="input_situation">
                                 <Autocomplete
                                 id="country-situation"
                                 sx={{ width: '100%' }}
                                 onChange={handleClickStance}
-                                options={situations}
+                                options={situationNamesForUI}
                                 autoHighlight
                                 getOptionLabel={(option) => option.label}
                                 
@@ -227,7 +263,7 @@ function Adminpage() {
                                 )}
                                 />
 
-                                <StyledTextArea onChange={(e) => setSituationContent(e.target.value)}/>
+                                <StyledTextArea onChange={(e) => setStanceContent(e.target.value)}/>
 
                             </div>
                             <div id="submit">
@@ -235,7 +271,7 @@ function Adminpage() {
                             </div>
                         </form>
                     
-                    </div> */}
+                    </div>
                     
                 </div>
               {showAddSituationModal && <AddSituationModal setShowAddSituationModal={setShowAddSituationModal}/>}
@@ -672,13 +708,13 @@ const countries = [
   ];
 
 const situations = [
-    { code: 'AI', label: 'Leans' },
-    { code: 'AL', label: 'Solution'},
-    { code: 'AM', label: 'Ceasefire'},
-    { code: 'AO', label: 'Right to defend'},
-    { code: 'AQ', label: 'Military Aid'},
-    { code: 'AR', label: 'Humanitarian Aid'},
-    { code: 'AS', label: 'Condemns Israel'},
-    { code: 'AT', label: 'Main Religion'},
+    { label: 'Leans' },
+    { label: 'Solution'},
+    { label: 'Ceasefire'},
+    { label: 'Right to defend'},
+    { label: 'Military Aid'},
+    { label: 'Humanitarian Aid'},
+    { label: 'Condemns Israel'},
+    { label: 'Main Religion'},
 ]
 export default Adminpage;

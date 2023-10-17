@@ -24,13 +24,8 @@ const mapSchema = new mongoose.Schema(
     },
     // The desktop html data of the CARFAX report
     stance: {
-      Leans:String,
-      Solution:String,
-      Ceasefire:String,
-      Right_to_defend:String,
-      Military_Aid:String,
-      Humanitarian_Aid:String,
-      Condemns_Israel:String,
+      type:String,
+      require:false
     },
     
    

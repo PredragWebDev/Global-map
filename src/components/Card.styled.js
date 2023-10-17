@@ -32,7 +32,7 @@ export const StyledCard = styled.div`
     }
 
     div#content {
-        height: calc(100% - 44px);
+        height: calc(100% - 60px);
         padding: 0px 15px;
         font-family: fangsong;
         font-size: 15px;
@@ -66,17 +66,36 @@ export const StyledCard = styled.div`
             border-radius: 10px !important;
         }
     }
-    .zoom-title {
-        font-size: 40px !important;
-    }
-    .zoom-content {
-        font-size: 25px !important;
-    }
-    .zoom-button {
-        width: 90px !important;
-        height: 40px !important;
-        font-size: 20px !important;
-        border-radius: 10px !important;
+
+    @media (max-width: 700px) {
+        width: 50%;
+
+        .sel-card {
+            div#card_border {
+    
+                width: 300px;
+                height: 300px !important;
+                max-height: 300px !important;
+                position: absolute;
+                top: -500px;
+                left: calc((100% - 300px) / 2);
+            }
+    
+            p#title {
+                font-size: 30px !important;
+            }
+    
+            div#content {
+                font-size: 20px !important;
+            }
+    
+            button#zoom {
+                width: 90px !important;
+                height: 40px !important;
+                font-size: 20px !important;
+                border-radius: 10px !important;
+            }
+        }
     }
 `
 

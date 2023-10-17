@@ -51,163 +51,79 @@ router.post("/update_situation", async (req, res) => {
 });
 
 router.post("/update_stance", async (req, res) => {
-    const {countryName, countryCode, situationName, situationContent} = req.body;
+    const {countryName, countryCode, stanceName, stanceContents} = req.body;
 
     console.log(req.body);
+    
 
     const country = await Countries.findOne({countryName});
 
+    
     if (country) {
-        try {
-            switch (situationName) {
-                case 'Leans':
-                    await Countries.findOneAndUpdate(
-                        {countryName:countryName},
-                        {
-                            $set: {
-                                    Leans:situationContent
-                            }
+        const temp_stance = country.stance;
+        if (temp_stance === undefined) {
+            let temp = {};
+            temp[stanceName] = stanceContents;
+            const stance = JSON.stringify(temp);
+    
+            console.log("stance>>>>", stance);
+            try {
+            
+                await Countries.findOneAndUpdate(
+                    {countryName:countryName},
+                    {
+                        $set: {
+                            stance
                         }
-                    );
-                    break;
-                case 'Solution':
-                    await Countries.findOneAndUpdate(
-                        {countryName:countryName},
-                        {
-                            $set: {
-                                    Solution:situationContent
-                            }
-                        },
-                        {multi: true}
-                    );
-                    break;
-                case 'Ceasefire':
-                    await Countries.findOneAndUpdate(
-                        {countryName:countryName},
-                        {
-                            $set: {
-                                    Ceasefire:situationContent
-                            }
-                        },
-                        {multi: true}
-                    );
-                    break;
-                case 'Right to defend':
-                    await Countries.findOneAndUpdate(
-                        {countryName:countryName},
-                        {
-                            $set: {
-                                    Right_to_defend:situationContent
-                            }
-                        },
-                        {multi: true}
-                    );
-                    break;
-                case 'Military Aid':
-                    await Countries.findOneAndUpdate(
-                        {countryName:countryName},
-                        {
-                            $set: {
-                                    Military_Aid:situationContent
-                            }
-                        },
-                        {multi: true}
-                    );
-                    break;
-                case 'Humanitarian Aid':
-                    await Countries.findOneAndUpdate(
-                        {countryName:countryName},
-                        {
-                            $set: {
-                                    Humanitarian_Aid:situationContent
-                            }
-                        },
-                        {multi: true}
-                    );
-                    break; 
-                case 'Condemns Israel':
-                    await Countries.findOneAndUpdate(
-                        {countryName:countryName},
-                        {
-                            $set: {
-                                    Condemns_Israel:situationContent
-                            }
-                        },
-                        {multi: true}
-                    );
-                    break;
-                default:
-                    break;
+                      }
+                );
+                res.status(200).send({"state":"okay"});
+            } catch (error) {
+                console.log("error updating:", error);
+                res.status(500).send({"state":"faild"});
             }
-            res.status(200).send({"state":"okay"});
-        } catch (error) {
-            console.log("error updating:", error);
-            res.status(500).send({"state":"faild"});
+    
+        } else {
+            let temp_ = JSON.parse(temp_stance);
+
+            console.log("stance>>>>",temp_);
+            let temp = {};
+            temp[stanceName] = stanceContents;
+            const combined = {...temp_, ...temp};
+
+            const stance = JSON.stringify(combined);
+
+
+            try {
+            
+                await Countries.findOneAndUpdate(
+                    {countryName:countryName},
+                    {
+                        $set: {
+                            stance
+                        }
+                      }
+                );
+                res.status(200).send({"state":"okay"});
+            } catch (error) {
+                console.log("error updating:", error);
+                res.status(500).send({"state":"faild"});
+            }
+
         }
+
     } else {
+        let temp = {};
+        temp[stanceName] = stanceContents;
+        const stance = JSON.stringify(temp);
 
-        let country = new Countries();
+        console.log("stance>>>>", stance);
+        let country = new Countries({
+            countryName,
+            countryCode,
+            stance
+        });
 
-        switch (situationName) {
-            case 'Leans':
-                country = new Countries({
-                    countryName,
-                    countryCode,
-                        Leans:situationContent
-                });
-                break;
-            case 'Solution':
-                country = new Countries({
-                    countryName,
-                    countryCode,
-                        Solution:situationContent
-                });
-                break;
-            case 'Ceasefire':
-                country = new Countries({
-                    countryName,
-                    countryCode,
-                        Ceasefire:situationContent
-                });
-                break;
-            case 'Right to defend':
-                country = new Countries({
-                    countryName,
-                    countryCode,
-                        Right_to_defend:situationContent
-                });
-                break;
-            case 'Military Aid':
-                country = new Countries({
-                    countryName,
-                    countryCode,
-                        Military_Aid:situationContent
-                });
-                break;
-            case 'Humanitarian Aid':
-                country = new Countries({
-                    countryName,
-                    countryCode,
-                        Humanitarian_Aid:situationContent
-                });
-                break; 
-            case 'Condemns Israel':
-                country = new Countries({
-                    countryName,
-                    countryCode,
-                        Condemns_Israel:situationContent
-                });
-                break;
-            default:
-                break;
-        }
-
-        // const newCountry = new Countries({
-        //     countryName,
-        //     situation: {
-        //         Leans:situationContent
-        //     },
-        // });
         try {
             
             await country.save();

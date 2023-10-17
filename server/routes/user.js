@@ -3,42 +3,54 @@ const router = express.Router();
 const Countries = require("../models/Country");
 
 router.post("/get_countrydata", async (req, res) => {
-    const countryData = await Countries.find({});
+    console.log("okay");
+    const countryData = await Countries.find({situation:{ $ne: undefined}});
 
-    const setting = countryData.map((data) => {
-        const {countryCode, setting} = data;
-        
-        return {
-            countryCode,
-            setting
+    const situations = countryData.map((data) => {
+        const {countryCode, situation} = data;
+        const temp = JSON.parse(situation);
+
+            return {
+                countryCode,
+                situation:temp
+            }
+    });
+
+    console.log("temp_situation>>>", situations);
+
+    // const situations = JSON.parse(temp_situations);
+
+    const countryColor = situations.map((data) => {
+
+        // const temp = JSON.parse(data.situation);
+
+
+        console.log("color>>>", data.situation.Leans);
+
+        if (data.situation.Leans !== undefined) {
+            return {
+                countryCode:data.countryCode,
+                color:data.situation.Leans
+            };
         }
     })
 
-    const countryColor = countryData.map((data) => {
-        const { countryCode, setting: { Leans } } = data;
+    const stance = countryData.map((data) => {
+        const { countryCode, stance } = data;
+        console.log("stance>>>", stance);
 
-        return {
-            countryCode,
-            color:Leans
-        };
-    })
+        if (stance !== undefined) {
 
-    const situation = countryData.map((data) => {
-        const { countryCode, Leans, Solution, Ceasefire, Right_to_defend, Military_Aid, Humanitarian_Aid, Condemns_Israel } = data;
-      
-        return {
-            countryCode:countryCode,    
-            leans: Leans,
-            solution: Solution,
-            ceasefire: Ceasefire,
-            right_to_defend: Right_to_defend,
-            military_aid: Military_Aid,
-            humanitarian_aid: Humanitarian_Aid,
-            condemns_israel: Condemns_Israel
-        };
+            const temp_stance = JSON.parse(stance);
+          
+            return {
+                countryCode:countryCode,    
+                stance:temp_stance
+            };
+        }
       });
 
-    res.status(200).send({"state":"okay", "countryColor":countryColor, "setting":setting, "situation": situation});
+    res.status(200).send({"state":"okay", "countryColor":countryColor, "situation":situations, "stance": stance});
 })
 
 module.exports = router;

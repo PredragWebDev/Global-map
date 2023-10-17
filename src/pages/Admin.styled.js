@@ -71,7 +71,7 @@ export const StyledAdmin = styled.div`
   }
 
   form {
-    width: 95%;
+    width: 90%;
   }
 
 
@@ -102,11 +102,27 @@ export const StyledAdmin = styled.div`
    
   }
 
+  @media (max-width:700px) {
+    
+    form {
+      width: 80%;
+    }
+  }
+
   @media (max-width: 600px) {
     div#input-field {
         div#country {
           width: 100%;
         }
+    }
+
+    .exitbutton {
+      width: 30px;
+      height: 50px;
+      cursor: pointer;
+      position: relative;
+      top: -50px;
+      right: -12px;
     }
 
   }
