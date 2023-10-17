@@ -10,22 +10,10 @@ export const StyledAddModal = styled.div`
     border-radius: 10px;
     justify-content: space-around;
     left: 30%;
-    padding: 10px;
     position: absolute;
     top: 20%;
     z-index: 1;
-
     div#title {
-        display:flex;
-
-        div#letter {
-            width:90%;
-        }
-        div#close {
-            width:10%;
-            display:flex;
-            align-items:top;
-        }
         p {
             text-align: center;
             font-size: 30px;
@@ -38,7 +26,7 @@ export const StyledAddModal = styled.div`
         justify-content: space-around;
     }
 
-    @media (max-width: 910px) {
+    @media (max-width: 900px) {
         width: 50%;
         
     }

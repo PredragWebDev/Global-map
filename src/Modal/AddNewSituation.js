@@ -2,24 +2,29 @@ import React, { useState } from "react";
 import axios from "axios";
 import TextField from '@mui/material/TextField';
 import { StyledAddModal, StyledAddButton } from "./AddSituation.styled"
+import {AiOutlineClose} from "react-icons/ai";
 
-const AddSituationModal = (props) => {
-    const [optionName, setOptionName] = useState("");
+const AddNewSituationModal = (props) => {
+    const [situationName, setSituationName] = useState("");
 
     const handleADD = () => {
-        axios.post("http://127.0.0.1:5001/api/admin/add_optionName", {
-            optionName
+        
+
+        axios.post("http://127.0.0.1:5001/api/admin/add_sitationName", {
+            situationName
         })
         .then((response) => {
             
             if (response.data.state === "okay") {
                 alert("Success!!!");
-                props.setShowAddSituationModal(false);
+                props.setIsAddModal(false);
             }
             else {
                 alert("Faild!");
             }
-            console.log(response.data);
+
+            props.handleShowSituation();
+          
             
         }).catch((error) => {
             if (error.response) {
@@ -36,7 +41,14 @@ const AddSituationModal = (props) => {
             <StyledAddModal>
                 <div id="title">
 
-                    <p>Add A New Name of Situation</p>
+                    <div id="letter">
+
+                        <p>Add A New Name of Situation</p>
+                    </div>
+                    <div id="close">
+
+                        <AiOutlineClose style={{width:"25px", height:"25px", cursor:"pointer"}} onClick={() => props.setIsAddModal(false)}/>
+                    </div>
                 </div>
                 <div id="inputfield">
 
@@ -47,7 +59,7 @@ const AddSituationModal = (props) => {
                             marginRight:'0',
                         },   
                     }} label="situationName" variant="outlined" 
-                    onChange={(e) => setOptionName(e.target.value)}
+                    onChange={(e) => setSituationName(e.target.value)}
                     />
                     <StyledAddButton onClick={handleADD}>ADD</StyledAddButton>
                 </div>
@@ -57,4 +69,4 @@ const AddSituationModal = (props) => {
     )
 }
 
-export default AddSituationModal;
+export default AddNewSituationModal;

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Countries = require("../models/Country");
 const Option = require("../models/Optioin");
+const Situation = require("../models/Situation");
 
 router.post("/update_situation", async (req, res) => {
     console.log(req.body);
@@ -137,18 +138,18 @@ router.post("/update_stance", async (req, res) => {
 
 })
 
-router.post("/get_situations", async (req, res) => {
-    const situations = await Option.find({});
+router.post("/get_optionNames", async (req, res) => {
+    const options = await Option.find({});
 
-    res.send({"state":"okay", situations});
+    res.send({"state":"okay", options});
 })
 
-router.post("/add_situation", async (req, res) => {
-    const {situationName} = req.body;
+router.post("/add_optionName", async (req, res) => {
+    const {optionName} = req.body;
 
     try {
         const option = new Option({
-            situationName
+            optionName
         })
 
         option.save();
@@ -159,5 +160,42 @@ router.post("/add_situation", async (req, res) => {
         res.send({"state":"faild"});
     }
 
+})
+
+router.post("/get_situationNames", async (req, res) => {
+    const situationNames = await Situation.find({});
+
+    res.send({"state":"okay", situationNames});
+})
+
+router.post("/add_sitationName", async (req, res) => {
+    const {situationName} = req.body;
+
+    console.log(situationName);
+
+    try {
+        const situation = new Situation({
+            situationName
+        })
+
+        situation.save();
+
+        res.send({"state":"okay"});
+    } catch (error) {
+        console.log("error is occured:", error);
+        res.send({"state":"okay"});
+    }
+})
+
+router.post("/delete_situationName", async (req, res) => {
+    const {situationName} = req.body;
+
+    try {
+        await Situation.deleteOne({situationName:situationName});
+        res.send({"state":"okay"});
+    } catch (error) {
+        console.log("Error is occured:", error)        ;
+        res.send({"state":"faild"});
+    }
 })
 module.exports = router;

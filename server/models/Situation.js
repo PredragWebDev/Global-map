@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const optionSchema = new mongoose.Schema(
+const situationSchema = new mongoose.Schema(
   {
     // The user that requested this report
     // Not required if single report
@@ -9,7 +9,7 @@ const optionSchema = new mongoose.Schema(
       required: false,
     },
     // The VIN the user requested the report for
-    optionName: {
+    situationName: {
       type: String,
       required: true,
     },
@@ -19,6 +19,6 @@ const optionSchema = new mongoose.Schema(
   }
 );
 
-optionSchema.index({ createdAt: 1 });
+situationSchema.index({ createdAt: 1 });
 
-module.exports = mongoose.model("Options", optionSchema);
+module.exports = mongoose.model("Situations", situationSchema);

@@ -5,7 +5,8 @@ export const StyledAdmin = styled.div`
   height: 100vh;
 
   div#input-field {
-    padding: 100px 50px;
+    width: 100%;
+    padding: 10px 50px;
 
     div#country {
       width: 30%;
@@ -16,6 +17,16 @@ export const StyledAdmin = styled.div`
 
   div#board {
     display:flex;
+    min-height:100%;
+  }
+
+  div#situations {
+    align-items:center;
+
+    div#add {
+      display:flex;
+      justify-content:center;
+    }
   }
 
   div#situation {

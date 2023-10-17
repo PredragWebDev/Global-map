@@ -7,20 +7,23 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import {AiFillPlusCircle} from "react-icons/ai";
 import { StyledAdmin, StyledButton, StyledTextArea, StyledSideBar } from "./Admin.styled";
+import SituationCard from "../components/SituationCard";
 import AddSituationModal from "../Modal/AddSituation";
+import AddNewSituationModal from "../Modal/AddNewSituation";
 import './Admin.css';
 
 function Adminpage() {
     const modalRef = useRef(null);
-    const [countryName, setCountry] = useState('');
-    const [countryCode, setCountryCode] = useState('');
+    const [selectedCountryName, setCountry] = useState('');
+    const [selectedCountrycode, setCountryCode] = useState('');
+    const [optionNames, setOptionsNames] = useState([]);
     const [situationNames, setSituationNames] = useState([]);
-
     const [stanceName, setStanceName] = useState('');
     const [stanceContents, setStanceContent] = useState({});
     const [showAddSituationModal, setShowAddSituationModal] = useState(false);
-
     const [situationNamesForUI, setSituationNamesForUI] = useState([]);
+    const [isAddRemove, setIsAddRemove] = useState(false);
+    const [isAddModal, setIsAddModal] = useState(false);
     let situationContents = {};
 
     const handleClickCountry = (event, value) => {
@@ -39,9 +42,42 @@ function Adminpage() {
     }
 
     const handleShowSituation = () => {
-      
+      setIsAddRemove(false);
+      axios.post("http://127.0.0.1:5001/api/admin/get_situationNames")
+      .then((response) => {
+        
+        if (response.data.state === "okay") {
+
+          let tempOptionName = response.data.situationNames.map(situation => {
+            return (
+              situation.situationName
+            )
+          })
+
+          console.log("situation names>>>",response.data.situationNames);
+
+          setSituationNames(tempOptionName);
+          
+        }
+        else {
+          alert("Faild!");
+        }
+        console.log(response.data);
+        
+      }).catch((error) => {
+        if (error.response) {
+            alert(error);
+            console.log("error~~~~~~~~~")
+            console.log(error.response)
+            console.log(error.response.status)
+            console.log(error.response.headers)
+          }
+      })
     }
 
+    const handleAddRemove = () => {
+      setIsAddRemove(true);
+    }
     const AddSituationContents = (situationName, situationContent) => {
 
       situationContents[situationName] = situationContent;
@@ -51,14 +87,14 @@ function Adminpage() {
 
     const handleSituationSubmit = async (e) => {
         e.preventDefault();
-        if (countryName.length === 0) {
+        if (selectedCountryName.length === 0) {
           alert("Please select country!");
           return;
         }
         // const data = new FormData(e.target);
 
         axios.post("http://127.0.0.1:5001/api/admin/update_situation", {
-          countryName, countryCode, situationContents
+          countryName:selectedCountryName, countryCode:selectedCountrycode, situationContents
         })
         .then((response) => {
           
@@ -84,12 +120,12 @@ function Adminpage() {
     const handleStanceSubmit = async (e) => {
         e.preventDefault();
 
-        if (countryName.length === 0) {
+        if (selectedCountryName.length === 0) {
           alert("Please select country!");
           return;
         }
         axios.post("http://127.0.0.1:5001/api/admin/update_stance", {
-          countryName, countryCode, stanceName, stanceContents
+          countryName:selectedCountryName, countryCode:selectedCountrycode, stanceName, stanceContents
         })
         .then((response) => {
           
@@ -118,6 +154,10 @@ function Adminpage() {
         setShowAddSituationModal(false);
       }
     };
+
+    const handleAddSituation = () => {
+      setIsAddModal(true);
+    }
   
     // Add event listener when the modal is open
     useEffect(() => {
@@ -132,29 +172,19 @@ function Adminpage() {
     }, [showAddSituationModal]);
 
     useEffect(() => {
-      axios.post("http://127.0.0.1:5001/api/admin/get_situations")
+      handleShowSituation();
+      axios.post("http://127.0.0.1:5001/api/admin/get_optionNames")
       .then((response) => {
         
         if (response.data.state === "okay") {
 
-          let tempSituationName = response.data.situations.map(situation => {
+          let tempOptionName = response.data.options.map(option => {
             return (
-              situation.situationName
+              option.optionName
             )
           })
 
-          setSituationNames(tempSituationName);
-
-          tempSituationName = response.data.situations.map(situation => {
-            return(
-              {
-                label:situation.situationName
-              }
-            )
-          });
-
-          setSituationNamesForUI(tempSituationName);
-          
+          setOptionsNames(tempOptionName);          
         }
         else {
           alert("Faild!");
@@ -181,108 +211,119 @@ function Adminpage() {
             <div id="board">
               <StyledSideBar>
                 <button id="situation" onClick={handleShowSituation}>Situation</button>
-                <button id="add_remove">Add/Remove</button>
+                <button id="add_remove" onClick={handleAddRemove}>Add/Remove</button>
                 <button id="list_edit">List/Edit</button>
               </StyledSideBar>
               <div id="input-field">
-                  <div id="country">
-                      <Autocomplete
-                          id="country-select"
-                          sx={{ width: '100%' }}
-                          options={countries}
-                          // onChange={(e) => setCountry(e.target.value.label)}
-                          onChange={handleClickCountry}
-                          autoHighlight
-                          getOptionLabel={(option) => option.label}
-                          renderOption={(props, option) => (
-                              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                              <img
-                                  loading="lazy"
-                                  width="20"
-                                  srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                                  src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                                  alt=""
-                              />
-                              {option.label} ({option.code}) +{option.phone}
-                              </Box>
-                          )}
-                          renderInput={(params) => (
-                              <TextField
-                              {...params}
-                              label="Choose a country"
-                              inputProps={{
-                                  ...params.inputProps,
-                                  autoComplete: 'new-password', // disable autocomplete and autofill
-                              }}
-                              />
-                          )}
-                      />
+                <div id="situations">
 
+                  {situationNames.map((name, index) => {
+
+                    return <SituationCard id={index} situationName={name} isAddRemove={isAddRemove} handleShowSituation={handleShowSituation}/>
+                  })}
+                  <div id="add">
+                    {isAddRemove && <AiFillPlusCircle style={{width:"50px", height:"50px", cursor:"pointer"}} onClick={handleAddSituation}/>}
                   </div>
-                  <div id="input-value-field">
-                      
-                      <div id="situation">
-                          <form onSubmit={handleSituationSubmit}>
-                              {
-                                situationNames.map((situationName, key) => {
-                                  return(
-                                  <TextField key={key} className="input_setting" id="Leans-basic"
-                                  sx={{
-                                      marginRight:'20px',
-                                      marginBottom:'20px',
-                                      [`@media (max-width: 600px)`]: {
-                                          width: '100%',
-                                          marginRight:'0',
-                                      },   
-                                  }} label={situationName}  variant="outlined" 
-                                  onChange={(e) => AddSituationContents(situationName, e.target.value)}
-                                  />)
-                                })
-                              }
-                              
-                              <div id="submit">
-                                  <StyledButton type="submit">Save</StyledButton>
-                              </div>
-                          </form>
+                  {isAddModal && <AddNewSituationModal setIsAddModal={setIsAddModal} handleShowSituation={handleShowSituation}/>}
+                </div>
+                {/* <div id="country">
+                    <Autocomplete
+                        id="country-select"
+                        sx={{ width: '100%' }}
+                        options={countries}
+                        // onChange={(e) => setCountry(e.target.value.label)}
+                        onChange={handleClickCountry}
+                        autoHighlight
+                        getOptionLabel={(option) => option.label}
+                        renderOption={(props, option) => (
+                            <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                            <img
+                                loading="lazy"
+                                width="20"
+                                srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                                src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                                alt=""
+                            />
+                            {option.label} ({option.code}) +{option.phone}
+                            </Box>
+                        )}
+                        renderInput={(params) => (
+                            <TextField
+                            {...params}
+                            label="Choose a country"
+                            inputProps={{
+                                ...params.inputProps,
+                                autoComplete: 'new-password', // disable autocomplete and autofill
+                            }}
+                            />
+                        )}
+                    />
 
-                          <AiFillPlusCircle style={{width:"50px", height:"50px", cursor:"pointer"}} onClick={() => setShowAddSituationModal(true)}/>
-                          
-                      </div>
+                </div>
+                <div id="input-value-field">
+                    
+                    <div id="situation">
+                        <form onSubmit={handleSituationSubmit}>
+                            {
+                              optionNames.map((situationName, key) => {
+                                return(
+                                <TextField key={key} className="input_setting" id="Leans-basic"
+                                sx={{
+                                    marginRight:'20px',
+                                    marginBottom:'20px',
+                                    [`@media (max-width: 600px)`]: {
+                                        width: '100%',
+                                        marginRight:'0',
+                                    },   
+                                }} label={situationName}  variant="outlined" 
+                                onChange={(e) => AddSituationContents(situationName, e.target.value)}
+                                />)
+                              })
+                            }
+                            
+                            <div id="submit">
+                                <StyledButton type="submit">Save</StyledButton>
+                            </div>
+                        </form>
 
-                      <div id="stance">
-                          <form onSubmit={handleStanceSubmit}>
-                              <div id="input_situation">
-                                  <Autocomplete
-                                  id="country-situation"
-                                  sx={{ width: '100%' }}
-                                  onChange={handleClickStance}
-                                  options={situationNamesForUI}
-                                  autoHighlight
-                                  getOptionLabel={(option) => option.label}
-                                  
-                                  renderInput={(params) => (
-                                      <TextField
-                                      {...params}
-                                      label="Choose a situation"
-                                      inputProps={{
-                                          ...params.inputProps,
-                                          autoComplete: 'new-password', // disable autocomplete and autofill
-                                      }}
-                                      />
-                                  )}
-                                  />
+                        <AiFillPlusCircle style={{width:"50px", height:"50px", cursor:"pointer"}} onClick={() => setShowAddSituationModal(true)}/>
+                        
+                    </div>
 
-                                  <StyledTextArea onChange={(e) => setStanceContent(e.target.value)}/>
+                    <div id="stance">
+                        <form onSubmit={handleStanceSubmit}>
+                            <div id="input_situation">
+                                <Autocomplete
+                                id="country-situation"
+                                sx={{ width: '100%' }}
+                                onChange={handleClickStance}
+                                options={situationNamesForUI}
+                                autoHighlight
+                                getOptionLabel={(option) => option.label}
+                                
+                                renderInput={(params) => (
+                                    <TextField
+                                    {...params}
+                                    label="Choose a situation"
+                                    inputProps={{
+                                        ...params.inputProps,
+                                        autoComplete: 'new-password', // disable autocomplete and autofill
+                                    }}
+                                    />
+                                )}
+                                />
 
-                              </div>
-                              <div id="submit">
-                                  <StyledButton type="submit">Upload</StyledButton>
-                              </div>
-                          </form>
-                      
-                      </div>
-                      
-                  </div>
+                                <StyledTextArea onChange={(e) => setStanceContent(e.target.value)}/>
+
+                            </div>
+                            <div id="submit">
+                                <StyledButton type="submit">Upload</StyledButton>
+                            </div>
+                        </form>
+                    
+                    </div>
+                    
+                </div> */}
                 {showAddSituationModal && <AddSituationModal setShowAddSituationModal={setShowAddSituationModal}/>}
               </div>
             </div>
