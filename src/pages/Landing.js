@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { StyledLanding, StyledSituation } from "./Landing.styled";
 import { AiFillCloseCircle } from "react-icons/ai";
+import { MdLegendToggle} from "react-icons/md";
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
+import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import axios from "axios";
 import Card from "../components/Card";
+import LegendModal from "../Modal/LegendModal";
 import ExitButton from "../components/ExitButton";
 
 function Landingpage() {
@@ -186,6 +191,30 @@ function Landingpage() {
           </div>
         </StyledSituation>
       )}
+
+      <div id="legend">
+        <PopupState variant="popover" popupId="demo-popup-popover">
+          {(popupState) => (
+              <div>
+                  <MdLegendToggle style={{width:"50px", height:"50px", cursor:"pointer", color:"red"}} {...bindTrigger(popupState)}/>
+                  <Popover
+                      {...bindPopover(popupState)}
+                      anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                      }}
+                      // transformOrigin={{
+                      // vertical: 'bottom',
+                      // horizontal: 'left',
+                      // }}
+                  >
+                      <LegendModal/>
+                  </Popover>
+              </div>
+              
+          )}
+          </PopupState>
+      </div>
       
       {/* <div id="map" style={{ width: '100%', height: '800px' }} />; */}
     </StyledLanding>

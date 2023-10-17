@@ -3,7 +3,12 @@ import styled from "styled-components";
 export const StyledLanding = styled.div`
   width: 100%;
   height: 100vh;
-
+  
+  div#legend {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+  }
 `;
 
 export const StyledSituation = styled.div`
