@@ -13,12 +13,13 @@ import LegendModal from "../Modal/LegendModal";
 import ExitButton from "../components/ExitButton";
 
 function Landingpage() {
-  // const [countryColor, setCountryColor] = useState([]);
-  let countryColors = [];
+  const [countryColors, setCountryColor] = useState([]);
   const [countrySetting, setCountrySetting] = useState({});
-  // const [countrySituations, setCountrySituations] = useState([]);
   const [isSituation, setIsSituation] = useState(false);
   const [showExitButton, setShowExitButton] = useState(true);
+  const [situationNames, setSituationNames] = useState({});
+  const [optionNames, setOptionNames] = useState({});
+
   let countryStance = [];
   const [stance, setStance] = useState ([
     {
@@ -76,86 +77,21 @@ function Landingpage() {
     }
 
   }
-
-  useEffect (() => {
-    axios.post("http://127.0.0.1:5001/api/user/get_countrydata")
+  const get_situationNames = () => {
+    axios.post("http://127.0.0.1:5001/api/user/get_situationNames")
     .then((response) => {
       
-      console.log("okay???");
-      console.log("response<<<<", response.data);
+      if (response.data.state === "okay") {
 
-      countryColors = response.data.countryColor.map((country) => {
+        setSituationNames(response.data.situationNames);
 
-        if ('color' in country) {
-          const color = country.color === "neutral" ? "grey" : country.color;
-          return {
-            countryCode:country.countryCode,
-            color:color
-          }
-        } else {
-          return {
-            countryCode: country.countryCode,
-            color: '#FFFFFF'
-          }
-        }
-      });
-
-      setCountrySetting(response.data.situation);
-
-      countryStance = response.data.stance;
-
-      mapboxgl.accessToken = "pk.eyJ1IjoiZGFubnlkaTEyIiwiYSI6ImNsbGVnejM4NDBnbmIzZ25nZTRvaTlmajEifQ.fp0Kus3cRBjo3TCGd0GF-w";
-    
-      const map = new mapboxgl.Map({
-        container: 'map', // HTML element ID where the map will be rendered
-        style: 'mapbox://styles/mapbox/light-v10',
-        center: [0, 0], // Initial map center coordinates
-        zoom: 1, // Initial map zoom level
-      });
-      
-      // Add countries layer to the map
-      map.on('load', () => {
-        map.addSource('countries', {
-          type: 'vector',
-          url: 'mapbox://mapbox.country-boundaries-v1',
-        });
-        
-        map.addLayer(
-          {
-            id: 'countries-layer',
-            type: 'fill',
-            source: 'countries',
-            'source-layer': 'country_boundaries',
-
-              paint: {
-                  'fill-color': [
-                  'match',
-                  ['get', 'iso_3166_1'],
-                  ...countryColors.flatMap(country => [country.countryCode, country.color]),
-                  // ...Object.keys(countryColors).reduce((acc, country) => {
-                  //     acc.push(country, countryColors[country]);
-                  //     return acc;
-                  // }, []),
-                  '#FFFFFF' // Default color for other countries
-                  ],
-                  'fill-outline-color': "#000000"
-              },
-          },
-          'waterway-label' // Place the layer below waterway labels for better visibility
-        );
-
-      });
-
-      map.on('click', 'countries-layer', function(e) {
-          var countryName = e.features[0].properties.iso_3166_1; // Get the name property of the clicked feature
-          handleSituation(countryName); // Display an alert with the country name
-          // console.log(countryName);
-      });
-
-      // Clean up resources on unmount
-      return () => {
-        map.remove();
-      };
+        console.log("option names>>>", response.data.situationNames);
+        // setOptionsNames(response.data.options);        
+      }
+      else {
+        alert("Faild!");
+      }
+      console.log(response.data);
       
     }).catch((error) => {
       if (error.response) {
@@ -165,12 +101,72 @@ function Landingpage() {
           console.log(error.response.status)
           console.log(error.response.headers)
         }
-    });
-    
+    })
+  }
+  const get_OptionNames = (situationName) => {
+    axios.post("http://127.0.0.1:5001/api/user/get_OptionNames", {
+        situationName
+    })
+    .then((response) => {
+      
+      if (response.data.state === "okay") {
 
-    
+        setOptionNames(response.data.optinNames);
 
-  }, []);
+        console.log("option names>>>", response.data.situationNames);
+        // setOptionsNames(response.data.options);        
+      }
+      else {
+        alert("Faild!");
+      }
+      console.log(response.data);
+      
+    }).catch((error) => {
+      if (error.response) {
+          alert(error);
+          console.log("error~~~~~~~~~")
+          console.log(error.response)
+          console.log(error.response.status)
+          console.log(error.response.headers)
+        }
+    })
+}
+  const get_CountryColor = (situationName, optionName) => {
+    axios.post("http://127.0.0.1:5001/api/user/get_filterData", {
+        situationName, optionName
+    })
+    .then((response) => {
+      
+      if (response.data.state === "okay") {
+
+
+        console.log("option names>>>", response.data);
+        // setOptionsNames(response.data.options);        
+      }
+      else {
+        alert("Faild!");
+      }
+      console.log(response.data);
+      
+    }).catch((error) => {
+      if (error.response) {
+          alert(error);
+          console.log("error~~~~~~~~~")
+          console.log(error.response)
+          console.log(error.response.status)
+          console.log(error.response.headers)
+        }
+    })
+}
+  useEffect (() => {
+    get_situationNames();
+    if (situationNames[0].label !== undefined) {
+      get_OptionNames(situationNames[0].label);
+    }
+    if (optionNames[0].label !== undefined) {
+      get_CountryColor(situationNames[0].label, optionNames[0].label);
+    }
+  }, [situationNames, optionNames]);
 
   return (
     <StyledLanding>
@@ -208,7 +204,7 @@ function Landingpage() {
                       // horizontal: 'left',
                       // }}
                   >
-                      <LegendModal/>
+                      <LegendModal situationNames={situationNames} get_CountryColor={get_CountryColor} get_OptionNames={get_OptionNames} optionNames={optionNames}/>
                   </Popover>
               </div>
               

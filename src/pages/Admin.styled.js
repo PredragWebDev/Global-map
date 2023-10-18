@@ -7,12 +7,8 @@ export const StyledAdmin = styled.div`
   div#input-field {
     width: 100%;
     padding: 10px 50px;
-
-    div#country {
-      width: 30%;
-      display: flex;
-      margin-bottom: 50px;
-    }
+    position: relative;
+    
   }
 
   div#board {
@@ -28,63 +24,6 @@ export const StyledAdmin = styled.div`
       justify-content:center;
     }
   }
-
-  div#situation {
-    border: 1px solid;
-    border-radius: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 30px;
-    padding-top: 50px !important;
-    padding:20px;
-    justify-content: space-around;
-  }
-
-  div#situation::before {
-    content: "Situation";
-    position: absolute;
-    top: 295px;
-    left: 20%;
-    font-size: 30px;
-    font-weight: 500;
-    transform: translateX(-30%);
-    background-color: white;
-    padding: 0 10px;
-  }
-
-  div#stance {
-    border: 1px solid;
-    border-radius: 10px;
-    padding-top: 50px !important;
-    padding:20px;
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  div#stance::before {
-    content: "Stance ";
-    position: relative;
-    top: -73px;
-    left: 20%;
-    font-size: 30px;
-    font-weight: 500;
-    transform: translateX(-30%);
-    background-color: white;
-    padding: 0 10px;
-  }
- 
-  
-
-  div#submit {
-    display: flex;
-    justify-content: center;
-    margin-top: 30px;
-  }
-
-  form {
-    width: 90%;
-  }
-
 
   h1 {
     font-family: "Inter";
@@ -104,39 +43,6 @@ export const StyledAdmin = styled.div`
 
   }
 
-  @media (max-width: 800px) {
-    div#input-field {
-        div#country {
-          width: 50%;
-        }
-    }
-   
-  }
-
-  @media (max-width:700px) {
-    
-    form {
-      width: 80%;
-    }
-  }
-
-  @media (max-width: 600px) {
-    div#input-field {
-        div#country {
-          width: 100%;
-        }
-    }
-
-    .exitbutton {
-      width: 30px;
-      height: 50px;
-      cursor: pointer;
-      position: relative;
-      top: -50px;
-      right: -12px;
-    }
-
-  }
 `;
  
 export const StyledButton = styled.button`

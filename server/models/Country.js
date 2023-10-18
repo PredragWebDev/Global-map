@@ -18,12 +18,16 @@ const mapSchema = new mongoose.Schema(
       required: true
     },
     // The year make model of the VIN the report is for
-    situation: {
+    situationName: {
+      type:String,
+      required:false
+    },
+    options: {
       type:String,
       required:false
     },
     // The desktop html data of the CARFAX report
-    stance: {
+    side: {
       type:String,
       require:false
     },

@@ -9,10 +9,14 @@ const optionSchema = new mongoose.Schema(
       required: false,
     },
     // The VIN the user requested the report for
-    optionName: {
+    situationName: {
       type: String,
       required: true,
     },
+    optionName: {
+      type: String,
+      required: false
+    }
   },
   {
     timestamps: true,

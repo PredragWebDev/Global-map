@@ -13,7 +13,20 @@ const situationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    optionNames: {
+        type: String,
+        required: false,
+    },
+    oneSide: {
+        type: String,
+        required: true
+    },
+    otherSide: {
+        type: String,
+        required: true
+    }
   },
+  
   {
     timestamps: true,
   }

@@ -1,10 +1,10 @@
-import React, { useState} from "react";
+import React, { useEffect, useState} from "react";
 import { StyledSituationCard, StyledButton } from "./SituationCard.styled";
 import {AiOutlineClose} from "react-icons/ai";
 import axios from "axios";
 
 const SituationCard = (props) => {
-    const {id, situationName, isAddRemove} = props;
+    const {id, situationName, isAddRemove, oneSide, otherSide} = props;
 
     const handleDeleteSituation = (situationName) => {
         axios.post("http://127.0.0.1:5001/api/admin/delete_situationName", {
@@ -14,6 +14,7 @@ const SituationCard = (props) => {
             
             if (response.data.state === "okay") {
                 props.handleShowSituation();
+                props.setIsAddRemove(true);
             }
             else {
                 alert("Faild!");
@@ -29,15 +30,27 @@ const SituationCard = (props) => {
             }
         })     
     }
+
+    const handleSaveOption = (situationName) => {
+        if (!isAddRemove) {
+            
+            props.setSituationNameForSaving({situationName, oneSide, otherSide});
+            props.setIsSaveOptionModal(true);
+        }
+    }
+
     return (
-        <StyledSituationCard id={id}>
-            <div id={`card_border`}>
+        <StyledSituationCard keys={id} id={id}>
+            <div id={`card_board`}  className={isAddRemove && "removeCursorPoint"} onClick={() => handleSaveOption(situationName)}>
                 <div id="removebutton">
                     {isAddRemove && <AiOutlineClose style={{width:"30px", height:"30px", cursor:"pointer"}} onClick={() => handleDeleteSituation(situationName)}/>}
                 </div>
 
                 <div id="content">
-                    {situationName}
+                    {/* {`${situationName}`} */}
+                    <p id="situationName">{situationName}</p>
+                    <p id="oneSide">{`(${oneSide}, `}</p>
+                    <p id="otherSide">{`${otherSide})`}</p>
                 </div>
             </div>
         </StyledSituationCard>

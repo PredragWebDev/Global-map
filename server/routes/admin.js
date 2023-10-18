@@ -4,50 +4,62 @@ const Countries = require("../models/Country");
 const Option = require("../models/Optioin");
 const Situation = require("../models/Situation");
 
-router.post("/update_situation", async (req, res) => {
+router.post("/update_Country_Options", async (req, res) => {
     console.log(req.body);
-    const {countryName, countryCode, situationContents} = req.body; 
+    const {countryName, countryCode, situationName, side, optionContents} = req.body; 
 
-    const situation = JSON.stringify(situationContents);
+    const options = JSON.stringify(optionContents);
+    const jsonSide = JSON.stringify(side);
 
-    const country = await Countries.findOne({countryName});
+    console.log("options>>>>", options);
 
-    // console.log("exist?????", country);
+    try {
+        const country = await Countries.findOne({countryName:countryName, situationName:situationName});
 
-    if (country) {
-        try {
-            
-            await Countries.findOneAndUpdate(
-                {countryName:countryName},
-                {
-                    $set: {
-                        situation
-                    }
-                  }
-            );
-            res.status(200).send({"state":"okay"});
-        } catch (error) {
-            console.log("error updating:", error);
-            res.status(500).send({"state":"faild"});
-        }
-    } else {
-
-        console.log("in herer?????");
-        const newCountry = new Countries({
-            countryName,
-            countryCode,
-            situation
-        })
-        try {
-            
-            await newCountry.save();
-            res.status(200).send({"state":"okay"});
-        } catch (error) {
-            console.log("error adding:", error);
-            res.status(500).send({"state":"faild"});
-            
-        }
+        console.log("exist?????", country);
+    
+        if (country) {
+            try {
+                
+                await Countries.findOneAndUpdate(
+                    {countryName:countryName},
+                    {
+                        $set: {
+                            options, 
+                            side:jsonSide
+                        }
+                      }
+                );
+                res.status(200).send({"state":"okay"});
+            } catch (error) {
+                console.log("error updating:", error);
+                res.status(500).send({"state":"faild"});
+            }
+        } else {
+    
+            console.log("in herer?????");
+            const newCountry = new Countries({
+                countryName,
+                countryCode,
+                situationName,
+                options,
+                side:jsonSide
+            })
+            try {
+                
+                await newCountry.save();
+                res.status(200).send({"state":"okay"});
+            } catch (error) {
+                console.log("error adding:", error);
+                res.status(500).send({"state":"faild"});
+                
+            }
+        }    
+    } catch (error) {
+        console.log("error is occured:", error);
+        res.status(500).send({"state":"faild"});
     }
+    
 
 });
 
@@ -139,26 +151,74 @@ router.post("/update_stance", async (req, res) => {
 })
 
 router.post("/get_optionNames", async (req, res) => {
-    const options = await Option.find({});
+
+    const {situationName} = req.body;
+
+    const situation = await Situation.findOne({situationName:situationName});
+
+    const options = JSON.parse(situation.optionNames);
 
     res.send({"state":"okay", options});
 })
 
 router.post("/add_optionName", async (req, res) => {
-    const {optionName} = req.body;
+    const {situationName, optionName, defaultValue} = req.body;
+    let new_option = {};
+    new_option[optionName] = defaultValue;
+    const situation = await Situation.findOne({situationName:situationName})
 
-    try {
-        const option = new Option({
-            optionName
-        })
+    const options = situation.optionNames;
 
-        option.save();
-        res.send({"state":"okay"});
+
+    console.log("existed options>>>>>", options);
+    if (options === undefined) {
         
-    } catch (error) {
-        console.log("error is occured:", error);
-        res.send({"state":"faild"});
+
+        console.log("options", JSON.stringify(new_option));
+
+        const optionNames = JSON.stringify(new_option);
+
+        await Situation.findOneAndUpdate(
+            {situationName:situationName},
+            {
+                $set:{
+                    optionNames
+                }
+            }
+        )
+        res.send({"state":"okay"});
+    } else {
+        const existed_optionNames = situation.optionNames;
+        const jsonExisted_optionNames = JSON.parse(existed_optionNames);
+        const combined_option = {...jsonExisted_optionNames, ...new_option};
+        const optionNames = JSON.stringify(combined_option);
+
+        await Situation.findOneAndUpdate(
+            {situationName:situationName},
+            {
+                $set: {
+                    optionNames
+                }
+            }
+        )
+
+        res.send({"state":"okay"});
     }
+
+    // const valus = defaultValue.split(",");
+
+    // try {
+    //     const option = new Option({
+    //         optionName
+    //     })
+
+    //     option.save();
+    //     res.send({"state":"okay"});
+        
+    // } catch (error) {
+    //     console.log("error is occured:", error);
+    //     res.send({"state":"faild"});
+    // }
 
 })
 
@@ -169,13 +229,13 @@ router.post("/get_situationNames", async (req, res) => {
 })
 
 router.post("/add_sitationName", async (req, res) => {
-    const {situationName} = req.body;
+    const {situationName, oneSide, otherSide} = req.body;
 
-    console.log(situationName);
+    console.log(situationName, oneSide, otherSide);
 
     try {
         const situation = new Situation({
-            situationName
+            situationName, oneSide, otherSide
         })
 
         situation.save();
