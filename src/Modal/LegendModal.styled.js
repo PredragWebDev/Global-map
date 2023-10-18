@@ -34,5 +34,8 @@ export const StyledLegendModal = styled.div`
         height: 30px;
         background:grey;
     }
+    button#ok {
+        
+    }
 
 `
