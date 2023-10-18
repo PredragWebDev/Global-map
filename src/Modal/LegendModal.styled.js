@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 
 export const StyledLegendModal = styled.div`
-    width: 150px;
+    width: 250px;
     padding: 10px 20px;
     
     p {
@@ -11,14 +11,19 @@ export const StyledLegendModal = styled.div`
         font-family: fantasy;
         letter-spacing: 1px;
     }
-    div {
-        width: 100%;
-        display:flex;
-        justify-content:left;
-        margin-bottom: 5px;
-        margin-right: 20px;
-    }
+    
+    div#button {
+        display: flex;
+        justify-content: center;
 
+        button {
+            width: 48%;
+            cursor: pointer;
+            height: 35px;
+            border-radius: 10px;
+            font-size: 20px;
+        }
+    }
     div#israel {
         width: 30px;
         height: 30px;

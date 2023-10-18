@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { StyledLegendModal } from "./LegendModal.styled";
-import axios from "axios";
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 
@@ -19,17 +18,18 @@ const LegendModal = (props) => {
     const handleChangeOption = (event, value) => {
 
         if (value !== undefined) {
-            console.log("value>>", value.label);
             setSelectedOption(value.label);
+
         }
     }
 
     return (
         <StyledLegendModal>
             <p id="legend"> Filter by:</p>
+            {console.log("situationNames>>>>>>>><<<<<<<<<<<<", situationNames)}
             <Autocomplete
                 id="country-situation"
-                sx={{ width: '100%' }}
+                sx={{ width: '100%', marginBottom:"10px" }}
                 onChange={handleSituation}
                 options={situationNames}
                 autoHighlight
@@ -46,13 +46,14 @@ const LegendModal = (props) => {
                     />
                 )}
                 />
+                {console.log("optoinNames<<<<<<<<<<<<", optionNames)}
                 <Autocomplete
                 id="filter-option"
-                sx={{ width: '100%' }}
+                sx={{ width: '100%', marginBottom:"10px" }}
                 options={optionNames}
                 autoHighlight
                 getOptionLabel={(option) => option.label}
-                onchange={handleChangeOption}
+                onChange={handleChangeOption}
                 renderInput={(params) => (
                     <TextField
                     {...params}
@@ -64,8 +65,9 @@ const LegendModal = (props) => {
                     />
                 )}
                 />
-
-                <button id="ok" onClick={() => get_CountryColor(selectedSituation, selectedOption)}>OK</button>
+                <div id="button">
+                  <button id="ok" onClick={() => get_CountryColor(selectedSituation, selectedOption)}>OK</button>
+                </div>
             {/* <div>
                 <div id="israel"></div>
                 <p id="israel">Israel</p>
