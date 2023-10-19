@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { StyledLegendModal } from "./LegendModal.styled";
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 
 const LegendModal = (props) => {
-  const {optionNames, situationNames, get_CountryColor, get_OptionNames} = props;
+  const {optionNames, situationNames, get_CountryColor, get_OptionNames, closeFilterModal} = props;
   const [selectedSituation, setSelectedSituation] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
 
@@ -21,6 +21,11 @@ const LegendModal = (props) => {
             setSelectedOption(value.label);
 
         }
+    }
+
+    const handleOK = () => {
+        get_CountryColor(selectedSituation, selectedOption);
+        closeFilterModal();
     }
 
     return (
@@ -66,7 +71,7 @@ const LegendModal = (props) => {
                 )}
                 />
                 <div id="button">
-                  <button id="ok" onClick={() => get_CountryColor(selectedSituation, selectedOption)}>OK</button>
+                  <button id="ok" onClick={handleOK}>OK</button>
                 </div>
             {/* <div>
                 <div id="israel"></div>

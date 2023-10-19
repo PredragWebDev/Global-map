@@ -6,16 +6,20 @@ const MapComponent = (props) => {
     // const [countryColors , setCountryColors] = useState([]);
 
     // console.log("country corlors>>>>>", countryColors);
-    const countryColors = [
-        { countryCode: 'US', color: 'Blue' },
-        { countryCode: 'IR', color: 'Green' },
-        { countryCode: 'GB', color: 'Blue' }
-      ];
+    
+
+    // const countryColors = [
+    //     { countryCode: 'US', color: 'Blue' },
+    //     { countryCode: 'IR', color: 'Green' },
+    //     { countryCode: 'GB', color: 'Blue' }
+    //   ];
     // const countryColors = {
     //     RU: 'Green',
     //     CN: 'red',
     // };
   useEffect(() => {
+    const countryColors = props.countryColors;
+    console.log("gotten colors>>>", countryColors);
 
     // setCountryColors(props.countryColor.map((data) =>{
     //     const {countryCode, color} = data;

@@ -16,15 +16,6 @@ export const StyledAdmin = styled.div`
     min-height:100%;
   }
 
-  div#situations {
-    align-items:center;
-
-    div#add {
-      display:flex;
-      justify-content:center;
-    }
-  }
-
   h1 {
     font-family: "Inter";
     font-size: 40px;

@@ -16,7 +16,6 @@ import './Admin.css';
 
 function Adminpage() {
     const modalRef = useRef(null);
-
     
     const [showAddSituationModal, setShowAddSituationModal] = useState(true);
     const [situationNames, setSituationNames] = useState([]);
@@ -24,10 +23,16 @@ function Adminpage() {
     const [isAddRemove, setIsAddRemove] = useState(false);
     const [isAddModal, setIsAddModal] = useState(false);
     const [isSaveOptionsModal, setIsSaveOptionModal] = useState(false);
-
+    const [isSituation, setIsSitaution] = useState(true);
+    const [isFeed, setIsFeed] = useState(false);
     let situationContents = {};
 
+    const hadleFeed = () => {
+      setIsSitaution(false);
+      setIsFeed(true);
+    }
     const handleShowSituation = () => {
+      setIsSitaution(true);
       setIsAddRemove(false);
       axios.post("http://127.0.0.1:5001/api/admin/get_situationNames")
       .then((response) => {
@@ -94,9 +99,6 @@ function Adminpage() {
       };
     }, [showAddSituationModal]);
 
-  
-    
-
     return (
         <StyledAdmin>
             <div id = 'header'>
@@ -107,23 +109,30 @@ function Adminpage() {
                 <button id="situation" onClick={handleShowSituation}>Situation</button>
                 <button id="add_remove" onClick={handleAddRemove}>Add/Remove</button>
                 <button id="list_edit">List/Edit</button>
+                <button id="ssrfeed" onClick={hadleFeed}>Feed</button>
               </StyledSideBar>
               <div id="input-field">
-                <div id="situations">
+                {isSituation ? (
+                  <div id="situations">
 
-                  {situationNames.map((name, key) => {
-                    return <SituationCard keys={key} id={key} situationName={name.situationName} oneSide={name.oneSide} otherSide={name.otherSide} isAddRemove={isAddRemove} handleShowSituation={handleShowSituation} setIsAddRemove={setIsAddRemove} setIsSaveOptionModal={setIsSaveOptionModal} setSituationNameForSaving={setSituationNameForSaving}/>
-                  })}
+                    {situationNames.map((name, key) => {
+                      return <SituationCard keys={key} id={key} situationName={name.situationName} oneSide={name.oneSide} otherSide={name.otherSide} isAddRemove={isAddRemove} handleShowSituation={handleShowSituation} setIsAddRemove={setIsAddRemove} setIsSaveOptionModal={setIsSaveOptionModal} setSituationNameForSaving={setSituationNameForSaving}/>
+                    })}
 
-                  <div id="add">
-                    {isAddRemove && <AiFillPlusCircle style={{width:"50px", height:"50px", cursor:"pointer"}} onClick={handleAddSituation}/>}
+                    <div id="add">
+                      {isAddRemove && <AiFillPlusCircle style={{width:"50px", height:"50px", cursor:"pointer"}} onClick={handleAddSituation}/>}
+                    </div>
+
+                    {isAddModal && <AddNewSituationModal setIsAddModal={setIsAddModal} handleShowSituation={handleShowSituation}/>}
+
+                    {isSaveOptionsModal && <SaveOptionModal situationName={situationNameForSaving} setIsSaveOptionModal={setIsSaveOptionModal}/>}
                   </div>
+                ):(
+                  <div></div>
 
-                  {isAddModal && <AddNewSituationModal setIsAddModal={setIsAddModal} handleShowSituation={handleShowSituation}/>}
-
-                </div>
+                )}
                 
-                {isSaveOptionsModal && <SaveOptionModal situationName={situationNameForSaving} setIsSaveOptionModal={setIsSaveOptionModal}/>}
+                
                 {/* <SaveOptionModal/> */}
                 
               </div>
@@ -134,16 +143,4 @@ function Adminpage() {
     );
 }
 
-
-
-const situations = [
-    { label: 'Leans' },
-    { label: 'Solution'},
-    { label: 'Ceasefire'},
-    { label: 'Right to defend'},
-    { label: 'Military Aid'},
-    { label: 'Humanitarian Aid'},
-    { label: 'Condemns Israel'},
-    { label: 'Main Religion'},
-]
 export default Adminpage;

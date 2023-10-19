@@ -11,11 +11,10 @@ import AddNewOptionModal from "./AddNewOptionModal";
 const SaveOptionModal = (props) => {
     const {situationName, setIsSaveOptionModal} = props;
 
-
     const [selectedCountryName, setCountry] = useState('');
     const [selectedCountrycode, setCountryCode] = useState('');
     const [optionNames, setOptionsNames] = useState([]);
-
+    const [optionContents, setOptionContents] = useState({});
     const [stanceName, setStanceName] = useState('');
     const [stanceContents, setStanceContent] = useState({});
     const [showAddNewOptionModal, setShowAddNewOptionModal] = useState(false);
@@ -28,12 +27,14 @@ const SaveOptionModal = (props) => {
 
     const [selectedSide, setSelectedSide] = useState("");
 
-    let optionContents = {};
+    let temp_optionContents = {};
 
     const handleClickCountry = (event, value) => {
         if (value !== null) {
 
-            get_optionNames()
+            get_optionNames();
+            temp_optionContents = {};
+            setOptionContents(temp_optionContents);
             setCountry(value.label);
             setCountryCode(value.code)
         }
@@ -48,7 +49,9 @@ const SaveOptionModal = (props) => {
 
         if (value !== null) {
 
-            optionContents[optionName] = value.label;
+            temp_optionContents[optionName] = value.label;
+
+            setOptionContents(temp_optionContents);
         }
   
     }
@@ -68,6 +71,10 @@ const SaveOptionModal = (props) => {
           
           if (response.data.state === "okay") {
             alert("Success!");
+
+            temp_optionContents = {};
+
+            setOptionContents(temp_optionContents);
           }
           else {
             alert("Faild!");
@@ -263,7 +270,7 @@ const SaveOptionModal = (props) => {
                                     options={pickDefaultValue(optionName)}
                                     autoHighlight
                                     getOptionLabel={(option) => option.label}
-                                    
+                                    value={optionContents[optionName]}
                                     renderInput={(params) => (
                                         <TextField
                                         {...params}

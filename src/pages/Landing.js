@@ -11,6 +11,7 @@ import axios from "axios";
 import Card from "../components/Card";
 import LegendModal from "../Modal/LegendModal";
 import ExitButton from "../components/ExitButton";
+import MapComponent from "./mapcomponents";
 
 function Landingpage() {
   const [countryColor, setCountryColor] = useState([]);
@@ -133,15 +134,35 @@ function Landingpage() {
 }
   const get_CountryColor = (situationName, optionName) => {
     axios.post("http://127.0.0.1:5001/api/user/get_filterData", {
-        situationName, optionName
+      situationName, optionName
     })
     .then((response) => {
       
       if (response.data.state === "okay") {
+        
+        
+        console.log("get color?", response.data.countryOptions);
+        countryColors = response.data.countryOptions.map(option => {
+          if ('option' in option) {
+            const color = option.option === "Neutral" ? "grey" : (option.option === "YES" ? "green" : (option.option === "NO" ? "blue" : (option.option === "LIGHT" ? "green" : (option.option === "DARK" ? "blue" : option.option))));
+    
+            return {
+              countryCode:option.countryCode,
+              color:color
+            }
+          } else {
+            return {
+              countryCode:option.countryCode,
+              color:"#FFFFFF"
+            }
+          }
+        });
+        // setCountryColor(temp_countryColors);        
 
+        console.log("country colors>>>", countryColors);
 
-        console.log("country colors>>>", response.data);
-        setCountryColor(response.data.countryColor);        
+        draw_map();
+
       }
       else {
         alert("Faild!");
@@ -158,74 +179,94 @@ function Landingpage() {
         }
     })
 }
+
+const draw_map = () => {
+  
+  mapboxgl.accessToken = "pk.eyJ1IjoiZGFubnlkaTEyIiwiYSI6ImNsbGVnejM4NDBnbmIzZ25nZTRvaTlmajEifQ.fp0Kus3cRBjo3TCGd0GF-w";
+  
+  const map = new mapboxgl.Map({
+    container: 'map', // HTML element ID where the map will be rendered
+    style: 'mapbox://styles/mapbox/light-v10',
+    center: [0, 0], // Initial map center coordinates
+    zoom: 1, // Initial map zoom level
+  });
+  
+  // Add countries layer to the map
+  map.on('load', () => {
+    map.addSource('countries', {
+      type: 'vector',
+      url: 'mapbox://mapbox.country-boundaries-v1',
+    });
+    
+    map.addLayer(
+      {
+        id: 'countries-layer',
+        type: 'fill',
+        source: 'countries',
+        'source-layer': 'country_boundaries',
+
+          paint: {
+              'fill-color': [
+              'match',
+              ['get', 'iso_3166_1'],
+              ...countryColors.flatMap(country => [country.countryCode, country.color]),
+              // 'US', 'green',
+              '#FFFFFF' // Default color for other countries
+              ],
+              'fill-outline-color': "#000000"
+          },
+      },
+      'waterway-label' // Place the layer below waterway labels for better visibility
+    );
+
+  });
+
+  map.on('click', 'countries-layer', function(e) {
+      var countryName = e.features[0].properties.iso_3166_1; // Get the name property of the clicked feature
+      handleSituation(countryName); // Display an alert with the country name
+      // console.log(countryName);
+  });
+
+  // Clean up resources on unmount
+  return () => {
+    map.remove();
+  };
+}
 useEffect (() => {
   get_situationNames();
   axios.post("http://127.0.0.1:5001/api/user/get_initialColor")
   .then((response) => {
-    
-    console.log("okay???");
-    console.log("response<<<<", response.data.countryColor);
 
-    setCountryColor(response.data.countryColor);
-    countryColors = response.data.countryColor;
+    // countryColors = response.data.countryColor;
+    countryColors = response.data.countryOptions.map(option => {
+      console.log("dfsdfs>>", option);
+      if ('option' in option) {
+        const color = option.option === "Neutral" ? "grey" : (option.option === "YES" ? "green" : (option.option === "NO" ? "blue" : (option.option === "LIGHT" ? "green" : (option.option === "DARK" ? "blue" : option.option))));
 
-    console.log("country color>>>>", countryColors);
+        console.log("color>>>>", color);
+        return {
+          countryCode:option.countryCode,
+          color:color
+        }
+      } else {
+        return {
+          countryCode:option.countryCode,
+          color:"#FFFFFF"
+        }
+      }
+    });
+
+    console.log("colors>>>", countryColors);
+    // setCountryColor(temp_countryColors);
+
+    // console.log("country color>>>>", temp_countryColors);
 
     // setCountrySetting(response.data.situation);
 
     // countryStance = response.data.stance;
 
-    mapboxgl.accessToken = "pk.eyJ1IjoiZGFubnlkaTEyIiwiYSI6ImNsbGVnejM4NDBnbmIzZ25nZTRvaTlmajEifQ.fp0Kus3cRBjo3TCGd0GF-w";
-  
-    const map = new mapboxgl.Map({
-      container: 'map', // HTML element ID where the map will be rendered
-      style: 'mapbox://styles/mapbox/light-v10',
-      center: [0, 0], // Initial map center coordinates
-      zoom: 1, // Initial map zoom level
-    });
-    
-    // Add countries layer to the map
-    map.on('load', () => {
-      map.addSource('countries', {
-        type: 'vector',
-        url: 'mapbox://mapbox.country-boundaries-v1',
-      });
-      
-      map.addLayer(
-        {
-          id: 'countries-layer',
-          type: 'fill',
-          source: 'countries',
-          'source-layer': 'country_boundaries',
+    draw_map();
 
-            paint: {
-                'fill-color': [
-                'match',
-                ['get', 'iso_3166_1'],
-                ...countryColors.flatMap(country => [country.countryCode, country.color]),
-                null,
-                // 'US', 'green',
-                 // Default color for other countries
-                ],
-                'fill-outline-color': "#000000"
-            },
-        },
-        'waterway-label' // Place the layer below waterway labels for better visibility
-      );
-
-    });
-
-    map.on('click', 'countries-layer', function(e) {
-        var countryName = e.features[0].properties.iso_3166_1; // Get the name property of the clicked feature
-        handleSituation(countryName); // Display an alert with the country name
-        // console.log(countryName);
-    });
-
-    // Clean up resources on unmount
-    return () => {
-      map.remove();
-    };
-    
   }).catch((error) => {
     if (error.response) {
         alert(error);
@@ -235,16 +276,13 @@ useEffect (() => {
         console.log(error.response.headers)
       }
   });
-  
-
-  
 
 }, []);
 
   return (
     <StyledLanding>
       <div id="map" style={{ width: '100%', height: '100%' }} />
-      {/* <MapComponent countryColor = {countryColor}/> */}
+      {/* <MapComponent countryColors = {countryColors}/> */}
 
       {isSituation && (
         <StyledSituation>
@@ -277,7 +315,7 @@ useEffect (() => {
                       // horizontal: 'left',
                       // }}
                   >
-                      <LegendModal situationNames={situationNames} get_CountryColor={get_CountryColor} get_OptionNames={get_OptionNames} optionNames={optionNames}/>
+                      <LegendModal situationNames={situationNames} get_CountryColor={get_CountryColor} get_OptionNames={get_OptionNames} optionNames={optionNames} closeFilterModal={popupState.close}/>
                   </Popover>
               </div>
               

@@ -21,7 +21,7 @@ router.post("/get_initialColor", async (req, res) => {
             })
     
             console.log("result>>>", result);
-            res.send({"state":"okay", countryColor:result});
+            res.send({"state":"okay", countryOptions:result});
         }
     } catch (error) {
         console.log("Error is occured:", error);
@@ -128,9 +128,11 @@ router.post("/get_OptionNames", async (req, res) => {
 
 router.post("/get_filterData", async (req, res) => {
     const {situationName, optionName} = req.body;
+    console.log(req.body);
     try {
         
         const countries = await Countries.find({situationName}, {_id:0, countryCode:1, options:1});
+        console.log("countries>>>", countries);
         const result = countries.map(country => {
             const options = JSON.parse(country.options);
             return (
@@ -141,7 +143,9 @@ router.post("/get_filterData", async (req, res) => {
             )
         })
 
-        res.send({"state":"okay", countryColor:result});
+        console.log("result>>>>", result);
+
+        res.send({"state":"okay", countryOptions:result});
     } catch (error) {
         console.log("Error is occured:", error);
         res.send({"state":"faild"});
