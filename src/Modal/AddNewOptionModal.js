@@ -17,7 +17,7 @@ const AddNewOptionModal = (props) => {
         }
 
         
-        axios.post("http://38.242.156.153:5000api/admin/add_optionName", {
+        axios.post("http://38.242.156.153:5000/api/admin/add_optionName", {
             situationName, optionName, defaultValue
         })
         .then((response) => {

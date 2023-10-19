@@ -30,7 +30,7 @@ function Adminpage() {
       setIsSitaution(true);
       setIsFeed(false);
       setIsAddRemove(false);
-      axios.post("http://38.242.156.153:5000api/admin/get_situationNames")
+      axios.post("http://38.242.156.153:5000/api/admin/get_situationNames")
       .then((response) => {
         
         if (response.data.state === "okay") {

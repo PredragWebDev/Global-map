@@ -61,7 +61,7 @@ const Feed = (props) => {
     const get_optionNames = (situationName) => {
       console.log("selected situationName>>>", situationName);
 
-      axios.post("http://38.242.156.153:5000api/admin/get_optionNames", {
+      axios.post("http://38.242.156.153:5000/api/admin/get_optionNames", {
         situationName:situationName
       })
       .then((response) => {
@@ -110,7 +110,7 @@ const Feed = (props) => {
 
     const save_Feeds = () => {
 
-      axios.post("http://38.242.156.153:5000api/admin/save_feeds", {
+      axios.post("http://38.242.156.153:5000/api/admin/save_feeds", {
         countryName:selectedCountryName, 
         countryCode:selectedCountrycode, 
         situationName:selectedSituationName, 

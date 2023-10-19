@@ -15,7 +15,7 @@ const AddNewSituationModal = (props) => {
             alert("Please fill all data!");
             return;
         }
-        axios.post("http://38.242.156.153:5000api/admin/add_sitationName", {
+        axios.post("http://38.242.156.153:5000/api/admin/add_sitationName", {
             situationName, oneSide, otherSide
         })
         .then((response) => {

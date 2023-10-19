@@ -64,7 +64,7 @@ const SaveOptionModal = (props) => {
         }
         // const data = new FormData(e.target);
 
-        axios.post("http://38.242.156.153:5000api/admin/update_Country_Options", {
+        axios.post("http://38.242.156.153:5000/api/admin/update_Country_Options", {
           countryName:selectedCountryName, countryCode:selectedCountrycode, situationName:situationName.situationName, side:selectedSide, optionContents
         })
         .then((response) => {
@@ -98,7 +98,7 @@ const SaveOptionModal = (props) => {
           alert("Please select country!");
           return;
         }
-        axios.post("http://38.242.156.153:5000api/admin/update_stance", {
+        axios.post("http://38.242.156.153:5000/api/admin/update_stance", {
           countryName:selectedCountryName, countryCode:selectedCountrycode, stanceName, stanceContents
         })
         .then((response) => {
@@ -142,7 +142,7 @@ const SaveOptionModal = (props) => {
     }
 
     const get_optionNames = () => {
-        axios.post("http://38.242.156.153:5000api/admin/get_optionNames", {
+        axios.post("http://38.242.156.153:5000/api/admin/get_optionNames", {
             situationName:situationName.situationName
         })
         .then((response) => {
