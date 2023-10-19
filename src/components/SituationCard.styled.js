@@ -67,7 +67,7 @@ export const StyledSituationCard = styled.div`
         }
     }
     @media (max-width: 700px) {
-        padding:0px;
+        padding:20px 0px;
         div#content {
             display: flex;
             flex-wrap: wrap;

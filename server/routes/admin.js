@@ -154,11 +154,22 @@ router.post("/get_optionNames", async (req, res) => {
 
     const {situationName} = req.body;
 
-    const situation = await Situation.findOne({situationName:situationName});
+    console.log("situation param>>>", situationName);
 
-    const options = JSON.parse(situation.optionNames);
+    try {
+        const situation = await Situation.findOne({situationName:situationName});
+    
+        console.log("situation from db>>>>", situation);
+    
+        const options = JSON.parse(situation.optionNames);
+    
+        res.send({"state":"okay", options});
+        
+    } catch (error) {
+        console.log("Error is occured:", error);
+        res.send({"state":"faild"})
+    }
 
-    res.send({"state":"okay", options});
 })
 
 router.post("/add_optionName", async (req, res) => {

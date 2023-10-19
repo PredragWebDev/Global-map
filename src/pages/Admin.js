@@ -2,16 +2,12 @@
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import axios from "axios";
-import Autocomplete from '@mui/material/Autocomplete';
-
-import TextField from '@mui/material/TextField';
 import {AiFillPlusCircle} from "react-icons/ai";
 import { StyledAdmin,  StyledSideBar } from "./Admin.styled";
 import SituationCard from "../components/SituationCard";
-import AddSituationModal from "../Modal/AddNewOptionModal";
 import AddNewSituationModal from "../Modal/AddNewSituationModal";
 import SaveOptionModal from "../Modal/SaveOptionModal";
-
+import Feed from "../components/Feed";
 import './Admin.css';
 
 function Adminpage() {
@@ -25,7 +21,6 @@ function Adminpage() {
     const [isSaveOptionsModal, setIsSaveOptionModal] = useState(false);
     const [isSituation, setIsSitaution] = useState(true);
     const [isFeed, setIsFeed] = useState(false);
-    let situationContents = {};
 
     const hadleFeed = () => {
       setIsSitaution(false);
@@ -84,7 +79,6 @@ function Adminpage() {
       setIsAddModal(true);
 
     }
-  
     
     // Add event listener when the modal is open
     useEffect(() => {
@@ -112,7 +106,7 @@ function Adminpage() {
                 <button id="ssrfeed" onClick={hadleFeed}>Feed</button>
               </StyledSideBar>
               <div id="input-field">
-                {isSituation ? (
+                {isSituation &&
                   <div id="situations">
 
                     {situationNames.map((name, key) => {
@@ -127,17 +121,13 @@ function Adminpage() {
 
                     {isSaveOptionsModal && <SaveOptionModal situationName={situationNameForSaving} setIsSaveOptionModal={setIsSaveOptionModal}/>}
                   </div>
-                ):(
-                  <div></div>
-
-                )}
-                
-                
-                {/* <SaveOptionModal/> */}
+                }
+                {isFeed &&
+                  <Feed situationName={situationNames}/>
+                }
                 
               </div>
             </div>
-
         
         </StyledAdmin >
     );

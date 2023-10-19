@@ -34,6 +34,22 @@ export const StyledAdmin = styled.div`
 
   }
 
+  @media (max-width: 800px) {
+    div#input-field {
+      width: 100%;
+      padding: 10px 30px;
+      position: relative;
+      
+    }
+  }
+  @media (max-width: 600px) {
+    div#input-field {
+      width: 100%;
+      padding: 10px 15px;
+      position: relative;
+      
+    }
+  }
 `;
  
 export const StyledButton = styled.button`
@@ -49,16 +65,7 @@ export const StyledButton = styled.button`
     }
 `;
 
-export const StyledTextArea = styled.textarea`
-    width: 100%;
-    height: 200px;
-    border-radius: 10px;
-    font-size: 20px;
-    font-family: serif;
-    margin-top: 30px;
-    padding: 20px;
-    box-sizing: border-box;
-`;
+
 
 export const StyledSideBar = styled.div`
   width: 20%;
@@ -75,6 +82,18 @@ export const StyledSideBar = styled.div`
     cursor: pointer;
     &:hover {
       background:grey;
+    }
+  }
+
+  @media (max-width: 800px) {
+    button {
+      font-size: 17px;
+    }
+  }
+
+  @media (max-width: 500px) {
+    button {
+      font-size: 13px;
     }
   }
 `
