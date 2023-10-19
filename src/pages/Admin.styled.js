@@ -16,6 +16,10 @@ export const StyledAdmin = styled.div`
     min-height:100%;
   }
 
+  div#add {
+    display:flex;
+    justify-content:center;
+  }
   h1 {
     font-family: "Inter";
     font-size: 40px;
@@ -80,6 +84,12 @@ export const StyledSideBar = styled.div`
     font-size: 25px;
     margin-bottom: 10px;
     cursor: pointer;
+    &:hover {
+      background:grey;
+    }
+  }
+  button#ssrfeed {
+    background:aquamarine;
     &:hover {
       background:grey;
     }

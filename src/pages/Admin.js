@@ -28,6 +28,7 @@ function Adminpage() {
     }
     const handleShowSituation = () => {
       setIsSitaution(true);
+      setIsFeed(false);
       setIsAddRemove(false);
       axios.post("http://127.0.0.1:5001/api/admin/get_situationNames")
       .then((response) => {
@@ -64,7 +65,9 @@ function Adminpage() {
     }
 
     const handleAddRemove = () => {
+      handleShowSituation();
       setIsAddRemove(true);
+      setIsFeed(false);
       setIsSaveOptionModal(false);
       
     }
@@ -102,16 +105,16 @@ function Adminpage() {
               <StyledSideBar>
                 <button id="situation" onClick={handleShowSituation}>Situation</button>
                 <button id="add_remove" onClick={handleAddRemove}>Add/Remove</button>
-                <button id="list_edit">List/Edit</button>
+                {/* <button id="list_edit">List/Edit</button> */}
                 <button id="ssrfeed" onClick={hadleFeed}>Feed</button>
               </StyledSideBar>
               <div id="input-field">
                 {isSituation &&
                   <div id="situations">
 
-                    {situationNames.map((name, key) => {
+                    {situationNames.length>0 ? situationNames.map((name, key) => {
                       return <SituationCard keys={key} id={key} situationName={name.situationName} oneSide={name.oneSide} otherSide={name.otherSide} isAddRemove={isAddRemove} handleShowSituation={handleShowSituation} setIsAddRemove={setIsAddRemove} setIsSaveOptionModal={setIsSaveOptionModal} setSituationNameForSaving={setSituationNameForSaving}/>
-                    })}
+                    }) : "No Situations"}
 
                     <div id="add">
                       {isAddRemove && <AiFillPlusCircle style={{width:"50px", height:"50px", cursor:"pointer"}} onClick={handleAddSituation}/>}

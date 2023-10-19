@@ -28,7 +28,7 @@ const Feed = (props) => {
     const [isSaveOptionsModal, setIsSaveOptionModal] = useState(false);
     const [optionNames, setOptionsNames] = useState([]);
     const [showSaveModal, setShowSaveModal] = useState(false);
-    const [isSave, setIsSave] = useState(false);
+    // const [isSave, setIsSave] = useState(false);
     
     const handleClickCountry = (event, value) => {
       if (value !== null) {
@@ -92,10 +92,7 @@ const Feed = (props) => {
           }
       })
     }
-    const handleAddSituation = () => {
-        setIsAddModal(true);
-  
-      }
+
     const get_situationNamesfor_select = () => {
         
   
@@ -111,9 +108,42 @@ const Feed = (props) => {
        
     } 
 
-      useEffect(() => {
-        get_situationNamesfor_select();
-      }, [])
+    const save_Feeds = () => {
+
+      axios.post("http://127.0.0.1:5001/api/admin/save_feeds", {
+        countryName:selectedCountryName, 
+        countryCode:selectedCountrycode, 
+        situationName:selectedSituationName, 
+        optionName:selectedOptionName, 
+        headline:headline, 
+        link:headlinelink,
+        summary:summary
+      })
+      .then((response) => {
+        
+        if (response.data.state === "okay") {
+
+          alert("success!");
+          
+        }
+        else {
+          alert("Faild!");
+        }
+        console.log(response.data);
+        
+      }).catch((error) => {
+        if (error.response) {
+            alert(error);
+            console.log("error~~~~~~~~~")
+            console.log(error.response)
+            console.log(error.response.status)
+            console.log(error.response.headers)
+          }
+      })
+    }
+    useEffect(() => {
+      get_situationNamesfor_select();
+    }, [])
     return (
       <StyledFeed>
         <div id="country">
@@ -223,7 +253,7 @@ const Feed = (props) => {
           <button id='save' onClick={() => setShowSaveModal(true)}>SAVE</button>
         </div>
           
-        {showSaveModal && <ConfirmModal setShowSaveModal={setShowSaveModal} setIsSave={setIsSave}/>}
+        {showSaveModal && <ConfirmModal setShowSaveModal={setShowSaveModal} save_Feeds={save_Feeds}/>}
 
       </StyledFeed>
     )

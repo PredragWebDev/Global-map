@@ -11,9 +11,18 @@ export const StyledConfirmModal = styled.div`
     border-radius: 10px;
     padding: 20px 0px;
     div#question {
-        display:flex;
-        justify-content: center;
-        margin-bottom:60px;
+        margin-bottom:40px;
+
+        div#exitIcon {
+            display: flex;
+            justify-content: end;
+            padding: 0px 20px;
+            margin-bottom: 20px;
+        }
+
+        div#text {
+            text-align: center;
+        }
     }
     p {
         margin:0px;

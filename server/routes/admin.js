@@ -3,6 +3,7 @@ const router = express.Router();
 const Countries = require("../models/Country");
 const Option = require("../models/Optioin");
 const Situation = require("../models/Situation");
+const Feeds = require("../models/Feed");
 
 router.post("/update_Country_Options", async (req, res) => {
     console.log(req.body);
@@ -159,11 +160,18 @@ router.post("/get_optionNames", async (req, res) => {
     try {
         const situation = await Situation.findOne({situationName:situationName});
     
-        console.log("situation from db>>>>", situation);
+        console.log("situation from db>>>>", situation.optionNames);
+
+        if (situation.optionNames !== undefined) {
+
+            const options = JSON.parse(situation.optionNames);
+        
+            res.send({"state":"okay", options});
+        } else {
+            res.send({"state":"okay", options:[]});
+        } 
+        
     
-        const options = JSON.parse(situation.optionNames);
-    
-        res.send({"state":"okay", options});
         
     } catch (error) {
         console.log("Error is occured:", error);
@@ -268,5 +276,73 @@ router.post("/delete_situationName", async (req, res) => {
         console.log("Error is occured:", error)        ;
         res.send({"state":"faild"});
     }
+})
+
+router.post("/save_feeds", async (req, res) => {
+    const {countryName, countryCode, situationName, optionName, headline, link, summary} = req.body;
+
+    console.log("params>>>", req.body);
+
+    const country = await Feeds.findOne({
+            countryName:countryName,
+            situationName:situationName,
+            optionName:optionName,
+        })
+
+        console.log("sdsdsddsd>>>>", country);
+    
+    if (country !== null) {
+        try {
+            
+            await Feeds.findOneAndUpdate({
+                countryName:countryName,
+                situationName:situationName,
+                optionName:optionName,},
+                
+                {
+                    $set: {
+                        feed: {
+                            headline,
+                            link,
+                            summary
+                        }
+                    }
+                })
+
+            res.send({"state":"okay"});
+        } catch (error) {
+            console.log("Error is occured:", error);
+            res.send({"state":"faild"});
+        }
+    } else {
+        const feed = {
+            headline, link, summary
+        };
+
+        console.log("new feed>>>", feed);
+
+        try {
+
+            const feed = new Feeds({
+                countryName, countryCode, situationName, optionName, 
+                feed: {
+                    headline,
+                    link,
+                    summary
+                }
+            })
+    
+            console.log("country<<<<<>>>", country);
+            await feed.save();
+
+            res.send({"state":"okay"})
+        } catch (error) {
+            console.log("Error is occured:", error);
+            res.send({"state":"faild"})
+        }
+
+
+    }
+
 })
 module.exports = router;
