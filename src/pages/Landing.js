@@ -79,7 +79,7 @@ function Landingpage() {
 
   }
   const get_situationNames = () => {
-    axios.post("http://127.0.0.1:5001/api/user/get_situationNames")
+    axios.post("http://38.242.156.153:5000api/user/get_situationNames")
     .then((response) => {
       
       if (response.data.state === "okay") {
@@ -105,7 +105,7 @@ function Landingpage() {
     })
   }
   const get_OptionNames = (situationName) => {
-    axios.post("http://127.0.0.1:5001/api/user/get_OptionNames", {
+    axios.post("http://38.242.156.153:5000api/user/get_OptionNames", {
         situationName
     })
     .then((response) => {
@@ -133,7 +133,7 @@ function Landingpage() {
     })
 }
   const get_CountryColor = (situationName, optionName) => {
-    axios.post("http://127.0.0.1:5001/api/user/get_filterData", {
+    axios.post("http://38.242.156.153:5000api/user/get_filterData", {
       situationName, optionName
     })
     .then((response) => {
@@ -234,7 +234,7 @@ const draw_map = () => {
 }
 useEffect (() => {
   get_situationNames();
-  axios.post("http://127.0.0.1:5001/api/user/get_initialColor")
+  axios.post("http://38.242.156.153:5000api/user/get_initialColor")
   .then((response) => {
 
     // countryColors = response.data.countryColor;
