@@ -8,6 +8,8 @@ import axios from "axios";
 import {AiFillPlusCircle} from "react-icons/ai";
 import { StyledTextArea, StyledButton } from "../pages/Admin.styled";
 import AddNewOptionModal from "./AddNewOptionModal";
+
+
 const SaveOptionModal = (props) => {
     const {situationName, setIsSaveOptionModal} = props;
 
@@ -64,7 +66,7 @@ const SaveOptionModal = (props) => {
         }
         // const data = new FormData(e.target);
 
-        axios.post("http://38.242.156.153:5000/api/admin/update_Country_Options", {
+        axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/admin/update_Country_Options`, {
           countryName:selectedCountryName, countryCode:selectedCountrycode, situationName:situationName.situationName, side:selectedSide, optionContents
         })
         .then((response) => {
@@ -98,7 +100,7 @@ const SaveOptionModal = (props) => {
           alert("Please select country!");
           return;
         }
-        axios.post("http://38.242.156.153:5000/api/admin/update_stance", {
+        axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/admin/update_stance`, {
           countryName:selectedCountryName, countryCode:selectedCountrycode, stanceName, stanceContents
         })
         .then((response) => {
@@ -142,7 +144,7 @@ const SaveOptionModal = (props) => {
     }
 
     const get_optionNames = () => {
-        axios.post("http://38.242.156.153:5000/api/admin/get_optionNames", {
+        axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/admin/get_optionNames`, {
             situationName:situationName.situationName
         })
         .then((response) => {
@@ -207,14 +209,7 @@ const SaveOptionModal = (props) => {
                         </Box>
                     )}
                     renderInput={(params) => (
-                        <TextField
-                        {...params}
-                        label="Choose a country"
-                        inputProps={{
-                            ...params.inputProps,
-                            autoComplete: 'new-password', // disable autocomplete and autofill
-                        }}
-                        />
+                        <TextField {...params} label="Choose a country" variant="standard"/>
                     )}
                 />
 
@@ -229,21 +224,14 @@ const SaveOptionModal = (props) => {
                 getOptionLabel={(option) => option.label}
                 
                 renderInput={(params) => (
-                    <TextField
-                    {...params}
-                    label="Choose a side"
-                    inputProps={{
-                        ...params.inputProps,
-                        autoComplete: 'new-password', // disable autocomplete and autofill
-                    }}
-                    />
+                    <TextField {...params} label="Choose a side" variant="standard"/>
                 )}
                 />
             </div>
             <div id="input-value-field">
                 
                 <div id="options">
-                    <p>Options    <AiFillPlusCircle style={{width:"50px", height:"50px", cursor:"pointer"}} onClick={() => setShowAddNewOptionModal(true)}/></p>
+                    <p>Options    <AiFillPlusCircle className="plus-circle" onClick={() => setShowAddNewOptionModal(true)}/></p>
                     <form onSubmit={handleOptionSubmit}>
                         <div id="select_option">
                             {
@@ -272,15 +260,7 @@ const SaveOptionModal = (props) => {
                                     getOptionLabel={(option) => option.label}
                                     value={optionContents[optionName]}
                                     renderInput={(params) => (
-                                        <TextField
-                                        {...params}
-                                        label={optionName}
-                                        value="hello"
-                                        inputProps={{
-                                            ...params.inputProps,
-                                            autoComplete: 'new-password', // disable autocomplete and autofill
-                                        }}
-                                        />
+                                        <TextField {...params} label={optionName} value="hello" variant="standard"/>
                                     )}
                                     />)
                                 })

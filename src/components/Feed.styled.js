@@ -5,20 +5,17 @@ export const StyledFeed = styled.div`
     align-items:center;
 
     div#country {
-        margin-bottom:10px;
+        margin-bottom:20px;
     }
     div#situations {
-        margin-bottom:10px;
+        margin-bottom:20px;
     }
     div#options {
-        margin-bottom:10px;
+        margin-bottom:55px;
     }
     div#feed {
         
-        border:1px solid yellow;
-        border-radius:20px;
-        margin-bottom:30px;
-        padding:2%;
+        margin-bottom:70px;
 
         div#headlinelink {
             justify-content: space-between;
@@ -39,11 +36,14 @@ export const StyledFeed = styled.div`
         justify-content: center;
     }
     button#save {
-        background: cornflowerblue;
-        border-radius: 10px;
+        background: white;
         border: 0;
         cursor:pointer;
         font-size: 40px;
+
+        &: hover {
+            color:#f99d4b;
+        }
     }
 
     @media (max-width: 1000px) {

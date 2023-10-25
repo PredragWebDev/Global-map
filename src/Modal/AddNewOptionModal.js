@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 import { StyledAddModal, StyledAddButton } from "./AddNewOption.styled"
 import {AiOutlineClose} from "react-icons/ai";
 
+
 const AddNewOptionModal = (props) => {
     const [optionName, setOptionName] = useState("");
     const [defaultValue, setDefaultValue] = useState("");
@@ -17,7 +18,7 @@ const AddNewOptionModal = (props) => {
         }
 
         
-        axios.post("http://38.242.156.153:5000/api/admin/add_optionName", {
+        axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/admin/add_optionName`, {
             situationName, optionName, defaultValue
         })
         .then((response) => {

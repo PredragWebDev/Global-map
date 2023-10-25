@@ -6,11 +6,10 @@ export const StyledBody = styled.div`
     background: white;
     border: 2px solid #01aff1;
     border-radius: 5px;
-    box-shadow: 4px 5px 0px 3px #01aff1;
     left: 6%;
     padding: 20px;
     position: absolute;
-    top: 10%;
+    top: 5%;
     z-index: 1;
     box-sizing: border-box;
 
@@ -44,7 +43,6 @@ export const StyledBody = styled.div`
         display: flex;
         flex-wrap: wrap;
         margin-bottom: 30px;
-        padding-top: 50px !important;
         padding:20px;
         justify-content: space-around;
 
@@ -56,15 +54,25 @@ export const StyledBody = styled.div`
             font-weight: 500;
             margin:0px;
             position: relative;
-            top: -80px;
+            top: -47px;
             left: -30%;
             background: white;
+
         }
 
         div#select_option {
             display:flex;
             flex-wrap: wrap;
         }
+    }
+
+    .plus-circle {
+        width:50px;
+        height:50px;
+        cursor:pointer;
+    }
+    .plus-circle:hover {
+        color:#f99d4b;
     }
 
     div#stance {
@@ -114,6 +122,7 @@ export const StyledBody = styled.div`
           
                 font-size: 25px;
                 font-weight: 400;
+                top:-43px;
           
             }
     
@@ -123,7 +132,11 @@ export const StyledBody = styled.div`
             }
         }
     
-    
+        .plus-circle {
+            width:40px;
+            height:40px;
+            cursor:pointer;
+        }
     
     }
 
@@ -142,6 +155,7 @@ export const StyledBody = styled.div`
           
                 font-size: 20px;
                 font-weight: 300;
+                top: -37px;
           
             }
     
@@ -150,6 +164,12 @@ export const StyledBody = styled.div`
                 flex-wrap: wrap;
             }
         }
+        .plus-circle {
+            width:30px;
+            height:30px;
+            cursor:pointer;
+        }
+
         .exitbutton {
         width: 30px;
         height: 50px;

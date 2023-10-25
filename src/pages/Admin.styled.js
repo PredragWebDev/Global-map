@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const StyledAdmin = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 86vh;
 
   div#input-field {
     width: 100%;
@@ -25,12 +25,11 @@ export const StyledAdmin = styled.div`
     font-size: 40px;
     font-weight: 700;
     z-index: 1;
-    color: #ff4e4e;
     background-color: #ffffffe2;
     padding: 5px 25px;
     border-radius: 5px;
     cursor: pointer;
-    box-shadow: 4px 5px 0px 3px #ff4e4e;
+    border-bottom:1px solid;
 
     transition: color box-shadow background-color 0.2s ease-in-out;
     transition: box-shadow 0.2s ease-in-out;
@@ -59,13 +58,15 @@ export const StyledAdmin = styled.div`
 export const StyledButton = styled.button`
     width: 200px;
     height: 50px;
-    border-radius: 20px;
-    color: blue;
+    background: white;
+    border: 0px;
+    color: black;
+    cursor: pointer;
     font-size: 30px;
     font-weight: 700;
 
     &:hover {
-        color: red;
+        color: #f99d4b;
     }
 `;
 
@@ -88,11 +89,10 @@ export const StyledSideBar = styled.div`
       background:grey;
     }
   }
-  button#ssrfeed {
-    background:aquamarine;
-    &:hover {
-      background:grey;
-    }
+ 
+
+  .selected-button {
+    background:grey !important;
   }
 
   @media (max-width: 800px) {

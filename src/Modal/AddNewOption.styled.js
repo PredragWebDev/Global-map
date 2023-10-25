@@ -60,6 +60,7 @@ export const StyledAddModal = styled.div`
 export const StyledAddButton = styled.button`
     font-size: 40px;
     font-family: sans-serif;
+    margin-bottom: 10px;
 
     @media (max-width: 600px) {
         font-size: 20px

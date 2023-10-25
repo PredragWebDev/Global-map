@@ -5,11 +5,11 @@ const path = require("path");
 const mongoose = require("mongoose");
 const routes = require("./routes");
 const cors = require('cors');
+require('dotenv').config();
+const { MONGODB_URI, SESSION_SECRET, NODE_ENV} = process.env;
 
-// const { MONGODB_URI, SESSION_SECRET, NODE_ENV} = process.env;
-
-const port = process.env.APP_PORT || "5001";
-const MONGODB_URI = 'mongodb://127.0.0.1:27017/Global_Map';
+const port = process.env.APP_PORT || "5000";
+// const MONGODB_URI = 'mongodb://127.0.0.1:27017/Global_Map';
 // Connect to MongoDB
 mongoose
   .connect(MONGODB_URI, {

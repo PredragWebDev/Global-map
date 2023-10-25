@@ -8,11 +8,12 @@ export const StyledSituationCard = styled.div`
 
     div#card_board {
         width: 100%;
-        border:1px solid;
+        border-bottom:1px solid;
         background:white;
-        border-radius:10px;
         box-sizing: border-box;
         cursor:pointer;
+
+        
 
     }
     .removeCursorPoint {
@@ -44,6 +45,9 @@ export const StyledSituationCard = styled.div`
             margin-right:5px;
         }
         
+        &: hover {
+            color:#f99d4b;   
+        }
 
     }
 

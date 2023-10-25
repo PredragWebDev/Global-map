@@ -3,15 +3,13 @@ import { StyledLanding, StyledSituation } from "./Landing.styled";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { MdLegendToggle} from "react-icons/md";
 import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import axios from "axios";
 import Card from "../components/Card";
 import LegendModal from "../Modal/LegendModal";
-import ExitButton from "../components/ExitButton";
-import MapComponent from "./mapcomponents";
+
 
 function Landingpage() {
   const [countryColor, setCountryColor] = useState([]);
@@ -79,7 +77,7 @@ function Landingpage() {
 
   }
   const get_situationNames = () => {
-    axios.post("http://38.242.156.153:5000/api/user/get_situationNames")
+    axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/user/get_situationNames`)
     .then((response) => {
       
       if (response.data.state === "okay") {
@@ -105,7 +103,7 @@ function Landingpage() {
     })
   }
   const get_OptionNames = (situationName) => {
-    axios.post("http://38.242.156.153:5000/api/user/get_OptionNames", {
+    axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/user/get_OptionNames`, {
         situationName
     })
     .then((response) => {
@@ -133,7 +131,7 @@ function Landingpage() {
     })
 }
   const get_CountryColor = (situationName, optionName) => {
-    axios.post("http://38.242.156.153:5000/api/user/get_filterData", {
+    axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/user/get_filterData`, {
       situationName, optionName
     })
     .then((response) => {
@@ -182,6 +180,7 @@ function Landingpage() {
 
 const draw_map = () => {
   
+  // mapboxgl.accessToken = process.env.VITE_MAPBOX_TOKEN;
   mapboxgl.accessToken = "pk.eyJ1IjoiZGFubnlkaTEyIiwiYSI6ImNsbGVnejM4NDBnbmIzZ25nZTRvaTlmajEifQ.fp0Kus3cRBjo3TCGd0GF-w";
   
   const map = new mapboxgl.Map({
@@ -234,7 +233,7 @@ const draw_map = () => {
 }
 useEffect (() => {
   get_situationNames();
-  axios.post("http://38.242.156.153:5000/api/user/get_initialColor")
+  axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/user/get_initialColor`)
   .then((response) => {
 
     // countryColors = response.data.countryColor;

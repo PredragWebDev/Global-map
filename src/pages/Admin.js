@@ -9,6 +9,7 @@ import AddNewSituationModal from "../Modal/AddNewSituationModal";
 import SaveOptionModal from "../Modal/SaveOptionModal";
 import Feed from "../components/Feed";
 import './Admin.css';
+// require('dotenv').config();
 
 function Adminpage() {
     const modalRef = useRef(null);
@@ -24,13 +25,15 @@ function Adminpage() {
 
     const hadleFeed = () => {
       setIsSitaution(false);
+      setIsAddRemove(false);
       setIsFeed(true);
     }
     const handleShowSituation = () => {
       setIsSitaution(true);
       setIsFeed(false);
       setIsAddRemove(false);
-      axios.post("http://38.242.156.153:5000/api/admin/get_situationNames")
+      console.log(process.env.REACT_APP_SERVER_ADDRESS);
+      axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/admin/get_situationNames`)
       .then((response) => {
         
         if (response.data.state === "okay") {
@@ -40,7 +43,7 @@ function Adminpage() {
               situationName:situation.situationName, 
               oneSide: situation.oneSide,
               otherSide: situation.otherSide
-          })
+            })
           })
 
           console.log("situation names>>>",tempOptionName);
@@ -103,10 +106,10 @@ function Adminpage() {
             </div>
             <div id="board">
               <StyledSideBar>
-                <button id="situation" onClick={handleShowSituation}>Situation</button>
-                <button id="add_remove" onClick={handleAddRemove}>Add/Remove</button>
+                <button id="situation" className={isSituation && ( !isAddRemove && "selected-button")} onClick={handleShowSituation}>Situation</button>
+                <button id="add_remove" className={isAddRemove && "selected-button"} onClick={handleAddRemove}>Add/Remove</button>
                 {/* <button id="list_edit">List/Edit</button> */}
-                <button id="ssrfeed" onClick={hadleFeed}>Feed</button>
+                <button id="ssrfeed" className={isFeed && "selected-button"} onClick={hadleFeed}>Feed</button>
               </StyledSideBar>
               <div id="input-field">
                 {isSituation &&
@@ -117,7 +120,7 @@ function Adminpage() {
                     }) : "No Situations"}
 
                     <div id="add">
-                      {isAddRemove && <AiFillPlusCircle style={{width:"50px", height:"50px", cursor:"pointer"}} onClick={handleAddSituation}/>}
+                      {isAddRemove && <AiFillPlusCircle className="plus-circle" onClick={handleAddSituation}/>}
                     </div>
 
                     {isAddModal && <AddNewSituationModal setIsAddModal={setIsAddModal} handleShowSituation={handleShowSituation}/>}

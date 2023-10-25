@@ -61,7 +61,7 @@ const Feed = (props) => {
     const get_optionNames = (situationName) => {
       console.log("selected situationName>>>", situationName);
 
-      axios.post("http://38.242.156.153:5000/api/admin/get_optionNames", {
+      axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}/api/admin/get_optionNames`, {
         situationName:situationName
       })
       .then((response) => {
@@ -110,7 +110,7 @@ const Feed = (props) => {
 
     const save_Feeds = () => {
 
-      axios.post("http://38.242.156.153:5000/api/admin/save_feeds", {
+      axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}/api/admin/save_feeds`, {
         countryName:selectedCountryName, 
         countryCode:selectedCountrycode, 
         situationName:selectedSituationName, 
@@ -152,7 +152,7 @@ const Feed = (props) => {
               sx={{ width: '100%' }}
               options={countries}
               onChange={handleClickCountry}
-              autoHighlight
+              clearOnEscape
               getOptionLabel={(option) => option.label}
               renderOption={(props, option) => (
                   <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
@@ -167,14 +167,7 @@ const Feed = (props) => {
                   </Box>
               )}
               renderInput={(params) => (
-                  <TextField
-                  {...params}
-                  label="Choose a country"
-                  inputProps={{
-                      ...params.inputProps,
-                      autoComplete: 'new-password', // disable autocomplete and autofill
-                  }}
-                  />
+                  <TextField {...params} label="Choose a country" variant="standard"/>
               )}
           />
 
@@ -186,18 +179,11 @@ const Feed = (props) => {
               sx={{ width: '100%' }}
               options={situationNames}
               onChange={handleSituation}
-              autoHighlight
+              clearOnEscape
               getOptionLabel={(option) => option.label}
               
               renderInput={(params) => (
-                  <TextField
-                  {...params}
-                  label="Choose a situation"
-                  inputProps={{
-                      ...params.inputProps,
-                      autoComplete: 'new-password', // disable autocomplete and autofill
-                  }}
-                  />
+                  <TextField {...params} label="Choose a situation" variant='standard'/>
               )}
           />
 
@@ -209,18 +195,11 @@ const Feed = (props) => {
               sx={{ width: '100%' }}
               options={optionNames}
               onChange={handleOption}
-              autoHighlight
+              clearOnEscape
               getOptionLabel={(option) => option.label}
               
               renderInput={(params) => (
-                  <TextField
-                  {...params}
-                  label="Choose a option"
-                  inputProps={{
-                      ...params.inputProps,
-                      autoComplete: 'new-password', // disable autocomplete and autofill
-                  }}
-                  />
+                  <TextField {...params} label="Choose a option" variant='standard'/>
               )}
           />
 
@@ -228,21 +207,15 @@ const Feed = (props) => {
         <div id='feed'>
           <div id='headline'>
 
-            <TextField id="Leans-basic"
-            sx={{width:"100%",
-                
-            }}
-            label="Headline" value={headline}  variant="outlined" 
+            <TextField id="Leans-basic" sx={{width:"100%",}} label="Headline" value={headline}  variant="standard" 
             onChange={(e) => setHeadline(e.target.value)}/>
           </div>
           <div id='headlinelink'>
 
-            <TextField id="Leans-basic"
-            sx={{width:"90%"}}
-            label="Link" value={headlinelink}  variant="outlined" 
+            <TextField id="Leans-basic" sx={{width:"100%"}} label="Link" value={headlinelink}  variant="standard" 
             onChange={(e) => setHeadlineLink(e.target.value)}/>
 
-            <button id='test' onClick={test_link_function}>TEST</button>
+            {/* <button id='test' onClick={test_link_function}>TEST</button> */}
           </div>
           <StyledTextArea placeholder='input the summary...' onChange={(e) => setSummary(e.target.value)}>
 
