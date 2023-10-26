@@ -5,6 +5,8 @@ const Card = (props) => {
     const title = props.title;
     const content = props.content;
     const id = props.id;
+    const link = props.link;
+
     const [isZoom, setIsZoom] = useState(false);
 
     const handleZoom = (id) => {
@@ -35,7 +37,10 @@ const Card = (props) => {
                             {isZoom ? " Out" : "Zoom"}
                         </StyledButton>
                     </div>
+                    <div id="link">
 
+                        <a href={`${link}`}>{link}</a>
+                    </div>
                     <div id="content">
                         {content}
                     </div>

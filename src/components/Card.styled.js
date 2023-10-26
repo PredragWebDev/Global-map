@@ -8,27 +8,32 @@ export const StyledCard = styled.div`
   box-sizing: border-box;
   transition: position .1s ease-in-out;
 
-  div#card_border {
-    height:260px;
-    border:1px solid;
-    background:white;
-    border-radius:10px;
-    box-sizing: border-box;
-  }
+    div#card_border {
+        height:260px;
+        border:1px solid;
+        background:white;
+        border-radius:10px;
+        box-sizing: border-box;
+    }
 
-  div#title {
-    align-items:center;
-    display:flex;
-    justify-content: space-around;
-    
-        p#title {
-            text-align: center;
-            font-size: 20px;
-            font-family: fantasy;
-            letter-spacing: 1.5px;
-            margin-top:10px;
-            margin-bottom:10px;
-        }
+    div#title {
+        align-items:center;
+        display:flex;
+        justify-content: space-around;
+        
+            p#title {
+                text-align: center;
+                font-size: 20px;
+                font-family: fantasy;
+                letter-spacing: 1.5px;
+                margin-top:10px;
+                margin-bottom:10px;
+            }
+    }
+
+    div#link {
+        padding:0px 15px;
+        margin-bottom:5px;
     }
 
     div#content {

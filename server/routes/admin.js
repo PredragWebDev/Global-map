@@ -44,7 +44,7 @@ router.post("/update_Country_Options", async (req, res) => {
                 countryCode,
                 situationName,
                 options,
-                side:jsonSide
+                side
             })
             try {
                 
@@ -314,30 +314,30 @@ router.post("/save_feeds", async (req, res) => {
 
         console.log("sdsdsddsd>>>>", country);
     
-    if (country !== null) {
-        try {
+    // if (country !== null) {
+    //     try {
             
-            await Feeds.findOneAndUpdate({
-                countryName:countryName,
-                situationName:situationName,
-                optionName:optionName,},
+    //         await Feeds.findOneAndUpdate({
+    //             countryName:countryName,
+    //             situationName:situationName,
+    //             optionName:optionName,},
                 
-                {
-                    $set: {
-                        feed: {
-                            headline,
-                            link,
-                            summary
-                        }
-                    }
-                })
+    //             {
+    //                 $set: {
+    //                     feed: {
+    //                         headline,
+    //                         link,
+    //                         summary
+    //                     }
+    //                 }
+    //             })
 
-            res.send({"state":"okay"});
-        } catch (error) {
-            console.log("Error is occured:", error);
-            res.send({"state":"faild"});
-        }
-    } else {
+    //         res.send({"state":"okay"});
+    //     } catch (error) {
+    //         console.log("Error is occured:", error);
+    //         res.send({"state":"faild"});
+    //     }
+    // } else {
         const feed = {
             headline, link, summary
         };
@@ -365,7 +365,7 @@ router.post("/save_feeds", async (req, res) => {
         }
 
 
-    }
+    // }
 
 })
 module.exports = router;

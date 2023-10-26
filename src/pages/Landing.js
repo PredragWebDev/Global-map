@@ -16,62 +16,24 @@ function Landingpage() {
   const [showExitButton, setShowExitButton] = useState(true);
   const [situationNames, setSituationNames] = useState([]);
   const [optionNames, setOptionNames] = useState([]);
+  const [selectedSituation, setSelectedSituation] = useState("");
+  const [selectedOption, setSelectedOption] = useState("");
+  let situationForFeed = "";
+  let optionForFeed = "";
 
-  let countryStance = [];
-  const [stance, setStance] = useState ([
-    {
-      title:'this is my first title',
-      content:"this is my first content"
-    },
-    {
-      title:'this is my second title',
-      content:"this is my second content"
-    }
-  ])
+  const [feed, setFeed] = useState ([]);
+
   let countryColors = [
     { countryCode: 'US', color: 'Blue' },
     { countryCode: 'IR', color: 'Green' },
     { countryCode: 'GB', color: 'Blue' }
   ];
 
-  const handleSituation = (countryCode) => {
-
-    const selectedCountry = countryStance.find(item => {
-
-      if (item !== null) {
-
-        if (item.countryCode === countryCode) {
-          return item;
-        }
-      }
-    });
-
-    console.log("selected country>>>", selectedCountry);
-
-    if (selectedCountry !== undefined) {
-
-      const temp = selectedCountry.stance;
-
-      const keys = Object.keys(temp);
-  
-      setStance(
-        keys.map(key => {
-          if (key !== "countryCode") {
-            const title = key;
-            console.log("title>>>.", title);
-            const content = temp[key];
-            console.log("content>>>>>", content);
-            return {
-              title:title,
-              content:content
-            }
-          }
-        })
-      )
-      setIsSituation(true);
-    } else {
-      setIsSituation(false);
-    }
+  const handle_click_country_on_map = (countryCode) => {
+    console.log(selectedOption);
+    console.log(selectedSituation);
+    get_feed(countryCode);
+    setIsSituation(true);
 
   }
   const get_situationNames = () => {
@@ -128,9 +90,9 @@ function Landingpage() {
         }
     })
 }
-  const get_CountryColor = (situationName, optionName) => {
+  const get_CountryColor = () => {
     axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/user/get_filterData`, {
-      situationName, optionName
+      situationName:selectedSituation, optionName:selectedOption
     })
     .then((response) => {
       
@@ -178,8 +140,8 @@ function Landingpage() {
 
 const draw_map = () => {
   
-  // mapboxgl.accessToken = process.env.VITE_MAPBOX_TOKEN;
-  mapboxgl.accessToken = "pk.eyJ1IjoiZGFubnlkaTEyIiwiYSI6ImNsbGVnejM4NDBnbmIzZ25nZTRvaTlmajEifQ.fp0Kus3cRBjo3TCGd0GF-w";
+  mapboxgl.accessToken = process.env.REACT_APP_VITE_MAPBOX_TOKEN;
+  // mapboxgl.accessToken = "pk.eyJ1IjoiZGFubnlkaTEyIiwiYSI6ImNsbGVnejM4NDBnbmIzZ25nZTRvaTlmajEifQ.fp0Kus3cRBjo3TCGd0GF-w";
   
   const map = new mapboxgl.Map({
     container: 'map', // HTML element ID where the map will be rendered
@@ -220,8 +182,7 @@ const draw_map = () => {
 
   map.on('click', 'countries-layer', function(e) {
       var countryName = e.features[0].properties.iso_3166_1; // Get the name property of the clicked feature
-      handleSituation(countryName); // Display an alert with the country name
-      // console.log(countryName);
+      handle_click_country_on_map(countryName); // Display an alert with the country name
   });
 
   // Clean up resources on unmount
@@ -229,12 +190,29 @@ const draw_map = () => {
     map.remove();
   };
 }
+
+const get_feed = (countryCode) => {
+  axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/user/get_feeds`, {
+    countryCode, situationName:situationForFeed, optionName:optionForFeed
+  })
+  .then((response) => {
+    if (response.data.state === "okay") {
+
+      setFeed(response.data.feed);
+      console.log("feed>>>>", response.data.feed);
+    } else {
+      console.log("getting geed is faild!");
+    }
+  })
+  .catch((error) => {
+    console.log("on getting feed, error is occured:", error);
+  })
+}
 useEffect (() => {
   get_situationNames();
   axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/user/get_initialColor`)
   .then((response) => {
 
-    // countryColors = response.data.countryColor;
     countryColors = response.data.countryOptions.map(option => {
       console.log("dfsdfs>>", option);
       if ('option' in option) {
@@ -253,14 +231,13 @@ useEffect (() => {
       }
     });
 
+    setSelectedOption(response.data.selectedOption);
+    optionForFeed = response.data.selectedOption;
+    setSelectedSituation(response.data.selectedSituation);
+    situationForFeed = response.data.selectedSituation;
+    get_OptionNames(response.data.selectedSituation);
+
     console.log("colors>>>", countryColors);
-    // setCountryColor(temp_countryColors);
-
-    // console.log("country color>>>>", temp_countryColors);
-
-    // setCountrySetting(response.data.situation);
-
-    // countryStance = response.data.stance;
 
     draw_map();
 
@@ -284,9 +261,9 @@ useEffect (() => {
       {isSituation && (
         <StyledSituation>
           <div id="border">
-            {stance.map((situation, index) => {
-              if (situation !== undefined)
-              return <Card id={index} title={situation.title} content={situation.content} setShowExitButton={setShowExitButton}/>
+            {feed.map((item, index) => {
+              if (item !== undefined)
+              return <Card id={index} title={item.headline} content={item.summary} link={item.link} setShowExitButton={setShowExitButton}/>
             })}
 
             {/* <ExitButton setIsSituation={setIsSituation}/> */}
@@ -312,7 +289,7 @@ useEffect (() => {
                       // horizontal: 'left',
                       // }}
                   >
-                      <LegendModal situationNames={situationNames} get_CountryColor={get_CountryColor} get_OptionNames={get_OptionNames} optionNames={optionNames} closeFilterModal={popupState.close}/>
+                      <LegendModal situationNames={situationNames} get_CountryColor={get_CountryColor} selectedOption={selectedOption} selectedSituation={selectedSituation} setSelectedOption={setSelectedOption} setSelectedSituation={setSelectedSituation} get_OptionNames={get_OptionNames} optionNames={optionNames} closeFilterModal={popupState.close}/>
                   </Popover>
               </div>
               

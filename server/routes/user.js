@@ -2,13 +2,15 @@ const express = require("express");
 const router = express.Router();
 const Countries = require("../models/Country");
 const Situation = require("../models/Situation");
+const Feeds = require("../models/Feed");
+
 router.post("/get_initialColor", async (req, res) => {
     console.log("okay");
     try {
         const situationNames = await Situation.find({optionNames: {$ne: undefined}}, {situationName:1, optionNames:1});
+        const optionName = Object.keys(JSON.parse(situationNames[0].optionNames))[0];
         if (situationNames[0].situationName !== undefined) {
             console.log("option name>>>>", situationNames[0].optionNames);
-            const optionName = Object.keys(JSON.parse(situationNames[0].optionNames))[0];
             const countries = await Countries.find({situationName:situationNames[0].situationName}, {_id:0, options:1, countryCode:1});
             const result = countries.map(country => {
                 const options = JSON.parse(country.options);
@@ -19,9 +21,11 @@ router.post("/get_initialColor", async (req, res) => {
                     }
                 )
             })
+
+            const selectedSituation = situationNames[0].situationName;
     
             console.log("result>>>", result);
-            res.send({"state":"okay", countryOptions:result});
+            res.send({"state":"okay", countryOptions:result, selectedSituation, selectedOption:optionName});
         }
     } catch (error) {
         console.log("Error is occured:", error);
@@ -75,7 +79,27 @@ router.post("/get_initialColor", async (req, res) => {
 
     // res.status(200).send({"state":"okay", "countryColor":countryColor, "situation":situations, "stance": stance});
 })
+router.post("/get_feeds", async (req, res) => {
+    console.log(req.body);
+    const {countryCode, situationName, optionName} = req.body;
 
+    try {
+        const feed = await Feeds.find({countryCode, situationName, optionName}, {_id:0, feed:1});
+        const result = feed.map(item => {
+            return {
+                headline:item.feed.headline,
+                link:item.feed.link,
+                summary:item.feed.summary
+            }
+        })
+        console.log("feed>>>>", result);
+        res.send({"state":"okay", feed:result});
+    } catch (error) {
+        console.log("Error is occured:", error);
+        res.send({"state":"faild"});
+    }
+
+})
 router.post("/get_situationNames", async (req, res) => {
 
     try {

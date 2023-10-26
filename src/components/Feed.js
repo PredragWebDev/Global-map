@@ -45,7 +45,7 @@ const Feed = (props) => {
     const get_optionNames = (situationName) => {
       console.log("selected situationName>>>", situationName);
 
-      axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}/api/admin/get_optionNames`, {
+      axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/admin/get_optionNames`, {
         situationName:situationName
       })
       .then((response) => {
@@ -94,7 +94,7 @@ const Feed = (props) => {
 
     const save_Feeds = () => {
 
-      axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}/api/admin/save_feeds`, {
+      axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/admin/save_feeds`, {
         countryName:selectedCountryName, 
         countryCode:selectedCountrycode, 
         situationName:selectedSituationName, 

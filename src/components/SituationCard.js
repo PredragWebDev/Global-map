@@ -7,7 +7,7 @@ const SituationCard = (props) => {
     const {id, situationName, isAddRemove, oneSide, otherSide} = props;
 
     const handleDeleteSituation = (situationName) => {
-        axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}/api/admin/delete_situationName`, {
+        axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/admin/delete_situationName`, {
             situationName
         })
         .then((response) => {

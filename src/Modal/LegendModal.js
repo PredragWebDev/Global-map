@@ -4,9 +4,9 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 
 const LegendModal = (props) => {
-  const {optionNames, situationNames, get_CountryColor, get_OptionNames, closeFilterModal} = props;
-  const [selectedSituation, setSelectedSituation] = useState("");
-  const [selectedOption, setSelectedOption] = useState("");
+  const {optionNames, situationNames, selectedOption, selectedSituation, get_CountryColor, setSelectedSituation, setSelectedOption, get_OptionNames, closeFilterModal} = props;
+//   const [selectedSituation, setSelectedSituation] = useState("");
+//   const [selectedOption, setSelectedOption] = useState("");
 
     const handleSituation = (event, value) => {
         if (value !== undefined) {
@@ -24,7 +24,7 @@ const LegendModal = (props) => {
     }
 
     const handleOK = () => {
-        get_CountryColor(selectedSituation, selectedOption);
+        get_CountryColor();
         closeFilterModal();
     }
 
@@ -39,7 +39,7 @@ const LegendModal = (props) => {
                 options={situationNames}
                 autoHighlight
                 getOptionLabel={(option) => option.label}
-                
+                value={{label:selectedSituation}}
                 renderInput={(params) => (
                     <TextField
                     {...params}
@@ -59,6 +59,7 @@ const LegendModal = (props) => {
                 autoHighlight
                 getOptionLabel={(option) => option.label}
                 onChange={handleChangeOption}
+                value={{label:selectedOption}}
                 renderInput={(params) => (
                     <TextField
                     {...params}
