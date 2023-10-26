@@ -125,7 +125,7 @@ function Adminpage() {
 
                     {isAddModal && <AddNewSituationModal setIsAddModal={setIsAddModal} handleShowSituation={handleShowSituation}/>}
 
-                    {isSaveOptionsModal && <SaveOptionModal situationName={situationNameForSaving} setIsSaveOptionModal={setIsSaveOptionModal}/>}
+                    {isSaveOptionsModal && <SaveOptionModal situation={situationNameForSaving} setIsSaveOptionModal={setIsSaveOptionModal}/>}
                   </div>
                 }
                 {isFeed &&

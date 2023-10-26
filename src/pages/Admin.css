@@ -8,6 +8,10 @@
     cursor:pointer;
 }
 
+.plus-circle:hover {
+    color:#f99d4b;
+}
+
 @media screen and (max-width:800px) {
     .plus-circle {
         width:40px;

@@ -38,6 +38,7 @@ export const StyledBody = styled.div`
     }
 
     div#options {
+        background: whitesmoke;
         border: 1px solid;
         border-radius: 10px;
         display: flex;
@@ -56,7 +57,7 @@ export const StyledBody = styled.div`
             position: relative;
             top: -47px;
             left: -30%;
-            background: white;
+            background: whitesmoke;
 
         }
 

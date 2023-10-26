@@ -3,11 +3,6 @@ import axios from "axios";
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import {AiFillPlusCircle} from "react-icons/ai";
-import SituationCard from "./SituationCard";
-import AddSituationModal from "../Modal/AddNewOptionModal";
-import AddNewSituationModal from "../Modal/AddNewSituationModal";
-import SaveOptionModal from "../Modal/SaveOptionModal";
 import { StyledFeed, StyledTextArea } from './Feed.styled';
 import ConfirmModal from '../Modal/ConfirmModal';
 
@@ -23,9 +18,6 @@ const Feed = (props) => {
     const [selectedCountryName, setCountry] = useState('');
     const [selectedCountrycode, setCountryCode] = useState('');
     const [selectedOptionName, setselectedOptionName] = useState("");
-    const [isAddRemove, setIsAddRemove] = useState(false);
-    const [isAddModal, setIsAddModal] = useState(false);
-    const [isSaveOptionsModal, setIsSaveOptionModal] = useState(false);
     const [optionNames, setOptionsNames] = useState([]);
     const [showSaveModal, setShowSaveModal] = useState(false);
     // const [isSave, setIsSave] = useState(false);
@@ -50,14 +42,6 @@ const Feed = (props) => {
       }
     }
 
-    const test_link_function = () => {
-      if (headlinelink !== "") {
-        const a_element = document.createElement('a');
-        a_element.href = headlinelink;
-        a_element.target='blank';
-        a_element.click();
-      }
-    }
     const get_optionNames = (situationName) => {
       console.log("selected situationName>>>", situationName);
 
@@ -231,20 +215,7 @@ const Feed = (props) => {
       </StyledFeed>
     )
   }
-        // <div id="situations">
-            /* {situationNames.map((name, key) => {
-            return <SituationCard keys={key} id={key} situationName={name.situationName} oneSide={name.oneSide} otherSide={name.otherSide} isAddRemove={isAddRemove} handleShowSituation={handleShowSituation} setIsAddRemove={setIsAddRemove} setIsSaveOptionModal={setIsSaveOptionModal} setSituationNameForSaving={setSituationNameForSaving}/>
-            })}
-
-            <div id="add">
-            {isAddRemove && <AiFillPlusCircle style={{width:"50px", height:"50px", cursor:"pointer"}} onClick={handleAddSituation}/>}
-            </div>
-
-            {isAddModal && <AddNewSituationModal setIsAddModal={setIsAddModal} handleShowSituation={handleShowSituation}/>}
-
-            {isSaveOptionsModal && <SaveOptionModal situationName={situationNameForSaving} setIsSaveOptionModal={setIsSaveOptionModal}/>} */
-        // </div>
-                
+               
 
   const countries = [
     { code: 'AD', label: 'Andorra', phone: '376' },

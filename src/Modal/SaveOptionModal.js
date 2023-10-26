@@ -6,40 +6,81 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import axios from "axios";
 import {AiFillPlusCircle} from "react-icons/ai";
-import { StyledTextArea, StyledButton } from "../pages/Admin.styled";
+import { StyledButton } from "../pages/Admin.styled";
 import AddNewOptionModal from "./AddNewOptionModal";
 
 
 const SaveOptionModal = (props) => {
-    const {situationName, setIsSaveOptionModal} = props;
+    const {situation, setIsSaveOptionModal} = props;
 
     const [selectedCountryName, setCountry] = useState('');
     const [selectedCountrycode, setCountryCode] = useState('');
     const [optionNames, setOptionsNames] = useState([]);
-    const [optionContents, setOptionContents] = useState({});
-    const [stanceName, setStanceName] = useState('');
-    const [stanceContents, setStanceContent] = useState({});
+    const [optionContents, setOptionContents] = useState([]);
     const [showAddNewOptionModal, setShowAddNewOptionModal] = useState(false);
-    // const [situationNamesForUI, setSituationNamesForUI] = useState([]);
-    const [sideOption, setSideOption] = useState([
-        {label:situationName.oneSide}, 
-        {label:situationName.otherSide},
-        {label:"Neutral"}
-    ]);
+    const [selectedSide, setSelectedSide] = useState('');
+    // const [sideOption, setSideOption] = useState([
+    //     {label:situation.oneSide}, 
+    //     {label:situation.otherSide},
+    //     {label:"Neutral"}
+    // ]);
 
-    const [selectedSide, setSelectedSide] = useState("");
+    const sideOption = [
+      {label:situation.oneSide}, 
+      {label:situation.otherSide},
+      {label:"Neutral"}
+    ]
+
 
     let temp_optionContents = {};
 
     const handleClickCountry = (event, value) => {
         if (value !== null) {
 
-            get_optionNames();
+            // get_optionNames();
             temp_optionContents = {};
             setOptionContents(temp_optionContents);
             setCountry(value.label);
             setCountryCode(value.code)
+            get_country_data(value.label, situation.situationName);
         }
+    }
+
+    const get_country_data = (countryName, situationName) => {
+
+      console.log("country name>>>>", countryName);
+      console.log("situation name>>>>", situationName);
+
+      axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/admin/get_country_data`, {
+        countryName, situationName
+      })
+      .then((response) => {
+        
+        if (response.data.state === "okay") {
+
+          console.log("option options>>>", response.data.options);
+          console.log("side>>>", response.data.side);
+          setOptionContents(response.data.options);     
+          // const label = response.data.side;
+          // const cleanedLabel = label.replace(/['"]+/g, '');
+
+          // setSelectedSide({ label: cleanedLabel });   
+          setSelectedSide(response.data.side);
+        }
+        else {
+          alert("Faild!");
+        }
+        console.log(response.data);
+        
+      }).catch((error) => {
+        if (error.response) {
+            alert(error);
+            console.log("error~~~~~~~~~")
+            console.log(error.response)
+            console.log(error.response.status)
+            console.log(error.response.headers)
+          }
+      })
     }
     
     const handleClickSide = (event, value) => {
@@ -51,7 +92,11 @@ const SaveOptionModal = (props) => {
 
         if (value !== null) {
 
+            temp_optionContents = {...optionContents};
+
             temp_optionContents[optionName] = value.label;
+
+            console.log("temp option content>>>>", temp_optionContents);
 
             setOptionContents(temp_optionContents);
         }
@@ -64,10 +109,9 @@ const SaveOptionModal = (props) => {
           alert("Please select country!");
           return;
         }
-        // const data = new FormData(e.target);
 
         axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/admin/update_Country_Options`, {
-          countryName:selectedCountryName, countryCode:selectedCountrycode, situationName:situationName.situationName, side:selectedSide, optionContents
+          countryName:selectedCountryName, countryCode:selectedCountrycode, situationName:situation.situationName, side:selectedSide, optionContents
         })
         .then((response) => {
           
@@ -77,6 +121,7 @@ const SaveOptionModal = (props) => {
             temp_optionContents = {};
 
             setOptionContents(temp_optionContents);
+            setSelectedSide('')
           }
           else {
             alert("Faild!");
@@ -92,43 +137,6 @@ const SaveOptionModal = (props) => {
               console.log(error.response.headers)
             }
         })
-    }
-    const handleStanceSubmit = async (e) => {
-        e.preventDefault();
-
-        if (selectedCountryName.length === 0) {
-          alert("Please select country!");
-          return;
-        }
-        axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/admin/update_stance`, {
-          countryName:selectedCountryName, countryCode:selectedCountrycode, stanceName, stanceContents
-        })
-        .then((response) => {
-          
-          if (response.data.state === "okay") {
-            alert("Success!");
-          }
-          else {
-            alert("Faild!");
-          }
-          console.log(response.data);
-          
-        }).catch((error) => {
-          if (error.response) {
-              alert(error);
-              console.log("error~~~~~~~~~")
-              console.log(error.response)
-              console.log(error.response.status)
-              console.log(error.response.headers)
-            }
-        })
-
-    }
-    const handleClickStance = (event, value) => {
-        if (value !== null) {
-  
-          setStanceName(value.label);
-        }
     }
 
     const pickDefaultValue = (option) => {
@@ -145,18 +153,12 @@ const SaveOptionModal = (props) => {
 
     const get_optionNames = () => {
         axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}api/admin/get_optionNames`, {
-            situationName:situationName.situationName
+            situationName:situation.situationName
         })
         .then((response) => {
           
           if (response.data.state === "okay") {
-  
-            // let tempOptionName = response.data.options.map(option => {
-            //   return (
-            //     option.optionName
-            //   )
-            // })
-  
+
             console.log("option names>>>", response.data.options);
             setOptionsNames(response.data.options);        
           }
@@ -177,14 +179,13 @@ const SaveOptionModal = (props) => {
     }
 
     useEffect(() => {
-        // handleShowSituation();
         get_optionNames()
       }, []);
   
     return (
         <StyledBody>
             <div id="title">
-                <p>{situationName.situationName}</p>
+                <p>{situation.situationName}</p>
                 <AiOutlineClose style={{width:"20px", height:"20px", position:"absolute", right:"15px", cursor:'pointer'}} onClick={() => setIsSaveOptionModal(false)}/>
             </div>
             <div id="country">
@@ -192,7 +193,6 @@ const SaveOptionModal = (props) => {
                     id="country-select"
                     sx={{ width: '100%' }}
                     options={countries}
-                    // onChange={(e) => setCountry(e.target.value.label)}
                     onChange={handleClickCountry}
                     autoHighlight
                     getOptionLabel={(option) => option.label}
@@ -215,14 +215,15 @@ const SaveOptionModal = (props) => {
 
             </div>
             <div id="side">
+              {console.log("selected side>>>", selectedSide)}
                 <Autocomplete
-                id="country-situation"
+                id="country-side"
                 sx={{ width: '100%' }}
                 onChange={handleClickSide}
                 options={sideOption}
                 autoHighlight
                 getOptionLabel={(option) => option.label}
-                
+                value={{label:selectedSide}}
                 renderInput={(params) => (
                     <TextField {...params} label="Choose a side" variant="standard"/>
                 )}
@@ -236,6 +237,7 @@ const SaveOptionModal = (props) => {
                         <div id="select_option">
                             {
                                 Object.keys(optionNames).map((optionName, key) => {
+                                  console.log("selected option>>>>", optionContents[optionName])
                                 return(
                                     <Autocomplete
                                     key={key}
@@ -258,9 +260,10 @@ const SaveOptionModal = (props) => {
                                     options={pickDefaultValue(optionName)}
                                     autoHighlight
                                     getOptionLabel={(option) => option.label}
-                                    value={optionContents[optionName]}
+                                    // value={optionContents[optionName]}
+                                    value={optionContents[optionName] === undefined ? null : {label:optionContents[optionName]}}
                                     renderInput={(params) => (
-                                        <TextField {...params} label={optionName} value="hello" variant="standard"/>
+                                        <TextField {...params} label={optionName} variant="standard"/>
                                     )}
                                     />)
                                 })
@@ -270,44 +273,10 @@ const SaveOptionModal = (props) => {
                             <StyledButton type="submit">Save</StyledButton>
                         </div>
                     </form>
-
-                    
                     
                 </div>
 
-                {/* <div id="stance">
-                    <form onSubmit={handleStanceSubmit}>
-                        <div id="input_situation">
-                            <Autocomplete
-                            id="country-situation"
-                            sx={{ width: '100%' }}
-                            onChange={handleClickStance}
-                            options={situationNamesForUI}
-                            autoHighlight
-                            getOptionLabel={(option) => option.label}
-                            
-                            renderInput={(params) => (
-                                <TextField
-                                {...params}
-                                label="Choose a situation"
-                                inputProps={{
-                                    ...params.inputProps,
-                                    autoComplete: 'new-password', // disable autocomplete and autofill
-                                }}
-                                />
-                            )}
-                            />
-
-                            <StyledTextArea onChange={(e) => setStanceContent(e.target.value)}/>
-
-                        </div>
-                        <div id="submit">
-                            <StyledButton type="submit">Upload</StyledButton>
-                        </div>
-                    </form>
-                
-                </div> */}
-                {showAddNewOptionModal && <AddNewOptionModal setShowAddNewOptionModal={setShowAddNewOptionModal} get_optionNames={get_optionNames} situationName={situationName.situationName}/>}
+                {showAddNewOptionModal && <AddNewOptionModal setShowAddNewOptionModal={setShowAddNewOptionModal} get_optionNames={get_optionNames} situationName={situation.situationName}/>}
             </div>
         </StyledBody>
     )

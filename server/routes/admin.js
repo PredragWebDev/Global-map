@@ -10,7 +10,7 @@ router.post("/update_Country_Options", async (req, res) => {
     const {countryName, countryCode, situationName, side, optionContents} = req.body; 
 
     const options = JSON.stringify(optionContents);
-    const jsonSide = JSON.stringify(side);
+    // const jsonSide = JSON.stringify(side);
 
     console.log("options>>>>", options);
 
@@ -27,7 +27,7 @@ router.post("/update_Country_Options", async (req, res) => {
                     {
                         $set: {
                             options, 
-                            side:jsonSide
+                            side:side
                         }
                       }
                 );
@@ -276,6 +276,29 @@ router.post("/delete_situationName", async (req, res) => {
         console.log("Error is occured:", error)        ;
         res.send({"state":"faild"});
     }
+})
+
+router.post("/get_country_data", async (req, res) => {
+    const {countryName, situationName} = req.body;
+
+    try {
+        const countryData = await Countries.findOne({countryName, situationName});
+        const side = countryData?.side === undefined ? "" : countryData.side ;
+        let options = {};
+        console.log(countryData?.options);
+        if (countryData?.options !== undefined) {
+
+            options = JSON.parse(countryData?.options);
+        }
+        res.send({"state":"okay", side, options});
+
+    } catch (error) {
+        console.log("error is occured:", error);
+
+        res.send({'state':"faild"});
+    }
+
+    
 })
 
 router.post("/save_feeds", async (req, res) => {

@@ -1,5 +1,5 @@
-import React, { useEffect, useState} from "react";
-import { StyledSituationCard, StyledButton } from "./SituationCard.styled";
+import React from "react";
+import { StyledSituationCard } from "./SituationCard.styled";
 import {AiOutlineClose} from "react-icons/ai";
 import axios from "axios";
 

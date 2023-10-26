@@ -12,8 +12,6 @@ import LegendModal from "../Modal/LegendModal";
 
 
 function Landingpage() {
-  const [countryColor, setCountryColor] = useState([]);
-  const [countrySetting, setCountrySetting] = useState({});
   const [isSituation, setIsSituation] = useState(false);
   const [showExitButton, setShowExitButton] = useState(true);
   const [situationNames, setSituationNames] = useState([]);

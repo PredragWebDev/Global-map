@@ -58,7 +58,7 @@ export const StyledAdmin = styled.div`
 export const StyledButton = styled.button`
     width: 200px;
     height: 50px;
-    background: white;
+    background: whitesmoke;
     border: 0px;
     color: black;
     cursor: pointer;
