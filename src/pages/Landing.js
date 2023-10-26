@@ -145,9 +145,11 @@ const draw_map = () => {
   
   const map = new mapboxgl.Map({
     container: 'map', // HTML element ID where the map will be rendered
-    style: 'mapbox://styles/mapbox/light-v10',
+    style: 'mapbox://styles/mapbox/dark-v10',
     center: [0, 0], // Initial map center coordinates
-    zoom: 1, // Initial map zoom level
+    zoom: 2, // Initial map zoom level
+    maxZoom:3.5,
+    minZoom:1.5,
   });
   
   // Add countries layer to the map
@@ -170,9 +172,10 @@ const draw_map = () => {
               ['get', 'iso_3166_1'],
               ...countryColors.flatMap(country => [country.countryCode, country.color]),
               // 'US', 'green',
-              '#FFFFFF' // Default color for other countries
+              '#384148' // Default color for other countries
               ],
-              'fill-outline-color': "#000000"
+              'fill-outline-color': "#798089",
+              
           },
       },
       'waterway-label' // Place the layer below waterway labels for better visibility

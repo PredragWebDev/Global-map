@@ -39,7 +39,7 @@ const Card = (props) => {
                     </div>
                     <div id="link">
 
-                        <a href={`${link}`}>{link}</a>
+                        <a href={`${link}`} target="blank">{link}</a>
                     </div>
                     <div id="content">
                         {content}
