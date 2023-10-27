@@ -145,42 +145,98 @@ const draw_map = () => {
   
   const map = new mapboxgl.Map({
     container: 'map', // HTML element ID where the map will be rendered
-    style: 'mapbox://styles/mapbox/dark-v10',
+    style: 'mapbox://styles/mapbox/light-v10',
+    // style: 'mapbox://styles/pedjolinodev/clo8v586y00ys01r29w52f7xx',
     center: [0, 0], // Initial map center coordinates
     zoom: 2, // Initial map zoom level
-    maxZoom:3.5,
+    maxZoom:3,
     minZoom:1.5,
+    pitchWithRotate:false,
+    touchZoomRotate:false
   });
   
-  // Add countries layer to the map
   map.on('load', () => {
     map.addSource('countries', {
       type: 'vector',
-      url: 'mapbox://mapbox.country-boundaries-v1',
+      url: 'mapbox://mapbox.country-boundaries-v1'
     });
-    
+
     map.addLayer(
       {
         id: 'countries-layer',
         type: 'fill',
         source: 'countries',
         'source-layer': 'country_boundaries',
-
-          paint: {
-              'fill-color': [
-              'match',
-              ['get', 'iso_3166_1'],
-              ...countryColors.flatMap(country => [country.countryCode, country.color]),
-              // 'US', 'green',
-              '#384148' // Default color for other countries
-              ],
-              'fill-outline-color': "#798089",
-              
-          },
+        paint: {
+          'fill-color': [
+            'match',
+            ['get', 'iso_3166_1'],
+            ...countryColors.flatMap(country => [country.countryCode, country.color]),
+            '#FAF9F4' // Default color for other countries
+          ],
+          'fill-outline-color': "#D1D1D1",
+          
+        },
       },
-      'waterway-label' // Place the layer below waterway labels for better visibility
     );
 
+  });
+
+  map.on('style.load', () => {
+    const labelLayers = map.getStyle().layers.filter(layer => layer.type === 'symbol');
+
+    console.log("layers>>>>", labelLayers);
+
+    labelLayers.forEach(layer => {
+      if (layer.id !== "water-point-label") {
+      // if (layer.id !== "country-label") {
+        map.removeLayer(layer.id);
+      }
+    });
+
+  });
+  
+  map.on('zoom', () => {
+    const curZoom = map.getZoom();
+    
+    if (curZoom > 2) {
+      if (!map.getLayer("country-label")) {
+        console.log("add layer");
+        map.addLayer({
+          id: "country-label",
+          // source: "countries",
+          // "source-layer": "country_boundaries",
+          source: "composite",
+          'source-layer': "place_label",
+          // 'source-layer': "water",
+          type: "symbol",
+          layout: {
+            
+            'text-field': [
+              'coalesce', // Use coalesce to display country name if available, otherwise display an empty string
+              ['get', 'name_en'],
+            ], 
+            'text-font': ['Open Sans Regular'],
+            'text-size': 12,
+            'text-radial-offset': 0.5,
+            'text-max-width': 10,
+            'text-padding': 2,
+            'text-letter-spacing': 0.01,
+            'text-line-height': 1.2,
+          },
+          paint: {
+            'text-color': '#72625C'
+          }
+        });
+
+        console.log("layout >>>>>",map.getLayer("countries-layer"));
+
+      }
+    } else {
+      if (map.getLayer("country-label")) {
+        map.removeLayer("country-label");
+      }
+    }
   });
 
   map.on('click', 'countries-layer', function(e) {
