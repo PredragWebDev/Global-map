@@ -142,25 +142,25 @@ function Landingpage() {
 const draw_map = () => {
   
   mapboxgl.accessToken = process.env.REACT_APP_VITE_MAPBOX_TOKEN;
-  // mapboxgl.accessToken = "pk.eyJ1IjoiZGFubnlkaTEyIiwiYSI6ImNsbGVnejM4NDBnbmIzZ25nZTRvaTlmajEifQ.fp0Kus3cRBjo3TCGd0GF-w";
   
   const map = new mapboxgl.Map({
     container: 'map', // HTML element ID where the map will be rendered
     style: 'mapbox://styles/mapbox/light-v10',
-    // style: 'mapbox://styles/pedjolinodev/clo8v586y00ys01r29w52f7xx',
-    center: [0, 0], // Initial map center coordinates
-    zoom: 2, // Initial map zoom level
-    maxZoom:3,
-    minZoom:1.5,
-    pitchWithRotate:false,
-    touchZoomRotate:false
+    center: [-95.7129, 37.0902], // Initial map center coordinates
+    maxZoom:5,
+    minZoom:0.5,
+    pitchWithRotate:true,
+    touchZoomRotate:false,
+    dragRotate:false
   });
-  // const geocoder = new MapboxGeocoder({
-  //   accessToken: mapboxgl.accessToken,
-  //   marker: false, // Disable geocoder marker on map
-  //   countries: 'country', // Limit search results to only country names
-  //   type: 'country'
-  // });
+
+  var mapBounds = [
+    [-300, -80], 
+    [260, 85.1164] 
+  ];
+
+  map.setMaxBounds(mapBounds);
+
   map.on('load', () => {
     map.addSource('countries', {
       type: 'vector',
@@ -184,40 +184,27 @@ const draw_map = () => {
         },
       },
     );
-
-    
-
+    map.addLayer(
+      {
+        id: 'water-point-labels',
+        type: 'symbol',
+        source: 'composite',
+        'source-layer': 'place_label',
+        filter: ['all', ['==', ['get', 'class'], 'water'], ['>=', ['zoom'], 2]],
+        layout: {
+          'text-field': ['get', 'name_en'],
+          'text-font': ['Open Sans Semibold'],
+          'text-size': 14,
+          'text-ignore-placement': true
+        },
+        paint: {
+          'text-color': '#72625C' // Set the color of water point names
+        }
+      },
+      
+    );
     
   });
-
-  // map.addControl(geocoder);
-
-  // map.on('load', () => {
-  //   // map.addSource('countries', {
-  //   //   type: 'vector',
-  //   //   url: 'mapbox://mapbox.country-boundaries-v1'
-  //   // });
-
-  //   map.addLayer(
-  //     {
-  //       id: 'countries-layer',
-  //       type: 'fill',
-  //       source: 'countries',
-  //       'source-layer': 'country_boundaries',
-  //       paint: {
-  //         'fill-color': [
-  //           'match',
-  //           ['get', 'iso_3166_1'],
-  //           ...countryColors.flatMap(country => [country.countryCode, country.color]),
-  //           '#FAF9F4' // Default color for other countries
-  //         ],
-  //         'fill-outline-color': "#D1D1D1",
-          
-  //       },
-  //     },
-  //   );
-
-  // });
 
   map.on('style.load', () => {
     const labelLayers = map.getStyle().layers.filter(layer => layer.type === 'symbol');
@@ -235,10 +222,7 @@ const draw_map = () => {
   
   map.on('zoom', () => {
     const curZoom = map.getZoom();
-    console.log(curZoom);
-    const labelLayers = map.getStyle().layers.filter(layer => layer.type === 'symbol');
-    console.log(labelLayers);
-    if (curZoom > 2) {
+    if (curZoom > 2.5) {
       if (!map.getLayer("country-labels")) {
         console.log("add layer");
         map.addLayer({
@@ -259,8 +243,6 @@ const draw_map = () => {
         
         );
 
-        console.log("layout >>>>>",map.getLayer("countries-layer"));
-
       }
     } else {
       if (map.getLayer("country-labels")) {
@@ -277,7 +259,6 @@ const draw_map = () => {
   // Clean up resources on unmount
   return () => {
     map.remove();
-    // map.getContainer().removeChild(geocoder.onAdd(map));
   };
 }
 
