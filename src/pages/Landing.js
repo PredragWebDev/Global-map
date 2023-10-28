@@ -9,6 +9,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import axios from "axios";
 import Card from "../components/Card";
 import LegendModal from "../Modal/LegendModal";
+import MapboxGeocoder from 'mapbox-gl-geocoder';
 
 
 function Landingpage() {
@@ -154,18 +155,22 @@ const draw_map = () => {
     pitchWithRotate:false,
     touchZoomRotate:false
   });
-  
+  // const geocoder = new MapboxGeocoder({
+  //   accessToken: mapboxgl.accessToken,
+  //   marker: false, // Disable geocoder marker on map
+  //   countries: 'country', // Limit search results to only country names
+  //   type: 'country'
+  // });
   map.on('load', () => {
     map.addSource('countries', {
       type: 'vector',
-      url: 'mapbox://mapbox.country-boundaries-v1'
+      url: 'mapbox://mapbox.country-boundaries-v1',
     });
-
     map.addLayer(
       {
         id: 'countries-layer',
         type: 'fill',
-        source: 'countries',
+        source: "countries",
         'source-layer': 'country_boundaries',
         paint: {
           'fill-color': [
@@ -180,7 +185,39 @@ const draw_map = () => {
       },
     );
 
+    
+
+    
   });
+
+  // map.addControl(geocoder);
+
+  // map.on('load', () => {
+  //   // map.addSource('countries', {
+  //   //   type: 'vector',
+  //   //   url: 'mapbox://mapbox.country-boundaries-v1'
+  //   // });
+
+  //   map.addLayer(
+  //     {
+  //       id: 'countries-layer',
+  //       type: 'fill',
+  //       source: 'countries',
+  //       'source-layer': 'country_boundaries',
+  //       paint: {
+  //         'fill-color': [
+  //           'match',
+  //           ['get', 'iso_3166_1'],
+  //           ...countryColors.flatMap(country => [country.countryCode, country.color]),
+  //           '#FAF9F4' // Default color for other countries
+  //         ],
+  //         'fill-outline-color': "#D1D1D1",
+          
+  //       },
+  //     },
+  //   );
+
+  // });
 
   map.on('style.load', () => {
     const labelLayers = map.getStyle().layers.filter(layer => layer.type === 'symbol');
@@ -189,7 +226,7 @@ const draw_map = () => {
 
     labelLayers.forEach(layer => {
       if (layer.id !== "water-point-label") {
-      // if (layer.id !== "country-label") {
+      // if (layer.id === "country-label") {
         map.removeLayer(layer.id);
       }
     });
@@ -198,43 +235,36 @@ const draw_map = () => {
   
   map.on('zoom', () => {
     const curZoom = map.getZoom();
-    
+    console.log(curZoom);
+    const labelLayers = map.getStyle().layers.filter(layer => layer.type === 'symbol');
+    console.log(labelLayers);
     if (curZoom > 2) {
-      if (!map.getLayer("country-label")) {
+      if (!map.getLayer("country-labels")) {
         console.log("add layer");
         map.addLayer({
-          id: "country-label",
-          // source: "countries",
-          // "source-layer": "country_boundaries",
+          id: 'country-labels',
+          type: 'symbol',
           source: "composite",
           'source-layer': "place_label",
-          // 'source-layer': "water",
-          type: "symbol",
+          filter: ['==', ['get', 'class'], 'country'],
           layout: {
-            
-            'text-field': [
-              'coalesce', // Use coalesce to display country name if available, otherwise display an empty string
-              ['get', 'name_en'],
-            ], 
-            'text-font': ['Open Sans Regular'],
-            'text-size': 12,
-            'text-radial-offset': 0.5,
-            'text-max-width': 10,
-            'text-padding': 2,
-            'text-letter-spacing': 0.01,
-            'text-line-height': 1.2,
+            'text-field': ['get', 'name_en'],
+            'text-font': ['Open Sans Semibold'],
+            'text-size': 14
           },
           paint: {
-            'text-color': '#72625C'
+            'text-color': '#72625C' // Set the color of country names
           }
-        });
+        },
+        
+        );
 
         console.log("layout >>>>>",map.getLayer("countries-layer"));
 
       }
     } else {
-      if (map.getLayer("country-label")) {
-        map.removeLayer("country-label");
+      if (map.getLayer("country-labels")) {
+        map.removeLayer("country-labels");
       }
     }
   });
@@ -247,6 +277,7 @@ const draw_map = () => {
   // Clean up resources on unmount
   return () => {
     map.remove();
+    // map.getContainer().removeChild(geocoder.onAdd(map));
   };
 }
 
