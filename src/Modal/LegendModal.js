@@ -40,18 +40,10 @@ const LegendModal = (props) => {
                 getOptionLabel={(option) => option.label}
                 value={{label:selectedSituation}}
                 renderInput={(params) => (
-                    <TextField
-                    {...params}
-                    label="Choose a situation"
-                    inputProps={{
-                        ...params.inputProps,
-                        autoComplete: 'new-password', // disable autocomplete and autofill
-                    }}
-                    />
+                    <TextField {...params} label="Choose a situation"/>
                 )}
-                />
-                {console.log("optoinNames<<<<<<<<<<<<", optionNames)}
-                <Autocomplete
+            />
+            <Autocomplete
                 id="filter-option"
                 sx={{ width: '100%', marginBottom:"10px" }}
                 options={optionNames}
@@ -60,31 +52,13 @@ const LegendModal = (props) => {
                 onChange={handleChangeOption}
                 value={{label:selectedOption}}
                 renderInput={(params) => (
-                    <TextField
-                    {...params}
-                    label="Choose a Option"
-                    inputProps={{
-                        ...params.inputProps,
-                        autoComplete: 'new-password', // disable autocomplete and autofill
-                    }}
-                    />
+                    <TextField {...params} label="Choose a Option" />
                 )}
-                />
-                <div id="button">
-                  <button id="ok" onClick={handleOK}>OK</button>
-                </div>
-            {/* <div>
-                <div id="israel"></div>
-                <p id="israel">Israel</p>
+            />  
+            <div id="button">
+                <button id="ok" onClick={handleOK}>OK</button>
             </div>
-            <div>
-                <div id="palestine"></div>
-                <p id="palestine">Palestine </p>
-            </div>
-            <div>
-                <div id="neutral"></div>
-                <p id="neutral">Neutral</p>
-            </div> */}
+            
         </StyledLegendModal>
     )
 }
