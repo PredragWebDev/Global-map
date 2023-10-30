@@ -8,7 +8,7 @@ import SituationCard from "../components/SituationCard";
 import AddNewSituationModal from "../Modal/AddNewSituationModal";
 import SaveOptionModal from "../Modal/SaveOptionModal";
 import Feed from "../components/Feed";
-import './Admin.css';
+import './index.css';
 // require('dotenv').config();
 
 function Adminpage() {

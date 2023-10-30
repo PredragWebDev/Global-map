@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyledLanding, StyledSituation } from "./Landing.styled";
 import { AiFillCloseCircle } from "react-icons/ai";
-import { MdLegendToggle} from "react-icons/md";
 import Popover from '@mui/material/Popover';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 import mapboxgl from 'mapbox-gl';
@@ -9,8 +8,8 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import axios from "axios";
 import Card from "../components/Card";
 import LegendModal from "../Modal/LegendModal";
-import MapboxGeocoder from 'mapbox-gl-geocoder';
-
+import {FaFilter} from "react-icons/fa";
+import './index.css';
 
 function Landingpage() {
   const [isSituation, setIsSituation] = useState(false);
@@ -348,7 +347,7 @@ useEffect (() => {
         <PopupState variant="popover" popupId="demo-popup-popover">
           {(popupState) => (
               <div>
-                  <MdLegendToggle style={{width:"50px", height:"50px", cursor:"pointer", color:"red"}} {...bindTrigger(popupState)}/>
+                  <FaFilter className="filter" {...bindTrigger(popupState)}/>
                   <Popover
                       {...bindPopover(popupState)}
                       anchorOrigin={{

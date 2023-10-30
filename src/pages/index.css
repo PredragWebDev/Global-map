@@ -12,6 +12,16 @@
     color:#f99d4b;
 }
 
+.filter {
+    width:50px;
+    height:50px;
+    cursor:pointer;
+    color:#6989A6;
+}
+
+.filter:hover {
+    color: #f99d4b;
+}
 @media screen and (max-width:800px) {
     .plus-circle {
         width:40px;

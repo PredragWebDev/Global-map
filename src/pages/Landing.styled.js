@@ -6,8 +6,8 @@ export const StyledLanding = styled.div`
   
   div#legend {
     position: absolute;
-    top: 0px;
-    right: 0px;
+    top: 5px;
+    right: 5px;
   }
 `;
 

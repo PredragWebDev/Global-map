@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { StyledLegendModal } from "./LegendModal.styled";
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -31,7 +31,6 @@ const LegendModal = (props) => {
     return (
         <StyledLegendModal>
             <p id="legend"> Filter by:</p>
-            {console.log("situationNames>>>>>>>><<<<<<<<<<<<", situationNames)}
             <Autocomplete
                 id="country-situation"
                 sx={{ width: '100%', marginBottom:"10px" }}
