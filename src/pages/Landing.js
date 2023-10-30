@@ -147,7 +147,7 @@ const draw_map = () => {
     container: 'map', // HTML element ID where the map will be rendered
     style: 'mapbox://styles/mapbox/light-v10',
     center: [-95.7129, 37.0902], // Initial map center coordinates
-    maxZoom:5,
+    maxZoom:10,
     minZoom:0.5,
     pitchWithRotate:true,
     touchZoomRotate:false,
@@ -190,7 +190,7 @@ const draw_map = () => {
         type: 'symbol',
         source: 'composite',
         'source-layer': 'place_label',
-        filter: ['all', ['==', ['get', 'class'], 'water'], ['>=', ['zoom'], 2]],
+        filter: ['all', ['==', ['get', 'class'], 'water'], ['>=', ['zoom'], 3]],
         layout: {
           'text-field': ['get', 'name_en'],
           'text-font': ['Open Sans Semibold'],
@@ -212,7 +212,7 @@ const draw_map = () => {
     console.log("layers>>>>", labelLayers);
 
     labelLayers.forEach(layer => {
-      if (layer.id !== "water-point-label") {
+      if (layer.id !== "water-point-label" && layer.id !== "waterway-label" && layer.id !== "water-line-label") {
       // if (layer.id === "country-label") {
         map.removeLayer(layer.id);
       }
