@@ -215,7 +215,6 @@ const Feed = (props) => {
       </StyledFeed>
     )
   }
-               
 
   const countries = [
     { code: 'AD', label: 'Andorra', phone: '376' },

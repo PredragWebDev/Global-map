@@ -5,10 +5,8 @@ import TextField from '@mui/material/TextField';
 
 const LegendModal = (props) => {
   const {optionNames, situationNames, selectedOption, selectedSituation, get_CountryColor, setSelectedSituation, setSelectedOption, get_OptionNames, closeFilterModal} = props;
-//   const [selectedSituation, setSelectedSituation] = useState("");
-//   const [selectedOption, setSelectedOption] = useState("");
 
-    const handleSituation = (event, value) => {
+  const handleSituation = (event, value) => {
         if (value !== undefined) {
             get_OptionNames(value.label);
             setSelectedSituation(value.label);
@@ -19,7 +17,6 @@ const LegendModal = (props) => {
 
         if (value !== undefined) {
             setSelectedOption(value.label);
-
         }
     }
 
