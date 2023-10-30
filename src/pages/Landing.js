@@ -250,10 +250,10 @@ const draw_map = () => {
     }
   });
 
-  map.on('click', 'countries-layer', function(e) {
-      var countryName = e.features[0].properties.iso_3166_1; // Get the name property of the clicked feature
-      handle_click_country_on_map(countryName); // Display an alert with the country name
-  });
+  // map.on('click', 'countries-layer', function(e) {
+  //     var countryName = e.features[0].properties.iso_3166_1; // Get the name property of the clicked feature
+  //     handle_click_country_on_map(countryName); // Display an alert with the country name
+  // });
 
   // Clean up resources on unmount
   return () => {
